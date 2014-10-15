@@ -1,0 +1,32 @@
+_ubiqx_ Modules
+===============
+
+Simple tools you should never need to write yourself (except maybe for a
+Computer Science class).
+
+* Linked Lists (Single and Double)
+* Binary Trees (Simple, AVL, and Splay)
+
+These modules have been around for a while.  They were originally written in
+the late 1980's/early 1990's for use on the Amiga platform.  They work just
+fine on Linux, OpenBSD, FreeBSD, and probably many others.  They are fairly
+self-contained, so the port to new platforms with relative ease.
+
+Using the _ubiqx_ Modules
+-------------------------
+
+These modules rely on a simple quirk of the C language.  The specification
+states that the address of a structure is the same as the address of its first
+member.^[ANSI-C, pg.174]^
+
+References
+----------
+
+[ANSI-C]::
+  Kernighan, Brian W.; Ritchie, Dennis M. (March 1988).  __The C Programming
+  Language (2nd ed.).__  Englewood Cliffs, NJ: Prentice Hall.  ISBN
+  0-13-110362-8.
+
+Timestamp
+---------
+$Id$
