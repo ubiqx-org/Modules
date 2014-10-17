@@ -1,23 +1,56 @@
 _ubiqx_ Modules
 ===============
 
-Simple tools you should never need to write yourself (except maybe for a
-Computer Science class).
+Simple tools you should never need to write yourself +
+(except maybe for a Computer Science class).
 
 * Linked Lists (Single and Double)
 * Binary Trees (Simple, AVL, and Splay)
+* Sparse Array and Cache
 
-These modules have been around for a while.  They were originally written in
-the late 1980's/early 1990's for use on the Amiga platform.  They work just
-fine on Linux, OpenBSD, FreeBSD, and probably many others.  They are fairly
-self-contained, so the port to new platforms with relative ease.
+These are the little training wheels that keep getting re-invented over and
+over again when they should be written once, written well, and re-used.
+
+The modules have been around for a while.
+
+* The *Binary Tree* code was originally written in the late 1980's/early
+  1990's for use on the Amiga platform.  The VAX/VMS OS included an AVL Tree
+  implementation (which didn't support the delete operation).  It seemed, at
+  the time, that the Amiga should have the same feature.
+
+* The *Linked List* code was added in the mid 1990's to consolidate several
+  different implementations within a single Linux/BSD application.  Linked
+  list implementations are sometimes written out of habit more than design.
+
+* The *Cache* code is a simple application of the Binary Splay Tree, in
+  which the Least Recently Used (LRU) nodes _tend_ to move toward the bottom
+  of the tree.  When the cache becomes full (as determined by the calling
+  application), suitably low-hanging leaf nodes can be selected for removal.
+
+* The *Sparse Array* is a nested tree structure, providing a mechanism for
+  mapping key-tuples to values.
+
+All of these modules have been tested on Linux, OpenBSD, and FreeBSD.  They
+are fairly self-contained, and should port to other platforms with relative
+ease.
+
+[verse, They Might Be Giants, Puppet Head (1985)]
+Do the dumb things I gotta do
+Touch the puppet head
 
 Using the _ubiqx_ Modules
 -------------------------
 
+The modules are written in plain C, in an object-oriented style. The header
+files contain macros that hide much of the gory details.  It is possible,
+for example to switch between binary tree types simply by changing which
+header is included.  There are example programs in the repository.
+
 These modules rely on a simple quirk of the C language.  The specification
-states that the address of a structure is the same as the address of its first
-member.^[ANSI-C, pg.174]^
+states that the address of a structure is the same as the address of its
+first member (see [ANSI-C, pg.174]).  As a result, if you include the node
+structure as the first item in your own data structure, you can simply pass
+that structure into the module functions.
 
 References
 ----------
