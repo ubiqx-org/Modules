@@ -34,10 +34,6 @@ All of these modules have been tested on Linux, OpenBSD, and FreeBSD.  They
 are fairly self-contained, and should port to other platforms with relative
 ease.
 
-[verse, They Might Be Giants, Puppet Head (1985)]
-Do the dumb things I gotta do
-Touch the puppet head
-
 Using the _ubiqx_ Modules
 -------------------------
 
@@ -59,6 +55,14 @@ References
   Kernighan, Brian W.; Ritchie, Dennis M. (March 1988).  __The C Programming
   Language (2nd ed.).__  Englewood Cliffs, NJ: Prentice Hall.  ISBN
   0-13-110362-8.
+
+Wikipedia::
+  AVL Tree::
+    http://en.wikipedia.org/wiki/AVL_tree
+  Binary Tree::
+    http://en.wikipedia.org/wiki/Binary_tree
+  Splay Tree::
+    http://en.wikipedia.org/wiki/Splay_tree
 
 Timestamp
 ---------
