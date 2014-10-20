@@ -38,15 +38,15 @@ Using the _ubiqx_ Modules
 -------------------------
 
 The modules are written in plain C, in an object-oriented style. The header
-files contain macros that hide much of the gory details.  It is possible,
-for example to switch between binary tree types simply by changing which
-header is included.  There are example programs in the repository.
+files contain macros that hide much of the gory details.  It is possible, for
+example to switch between binary tree types simply by changing which header
+is included.  There are example programs in the repository.
 
 These modules rely on a simple quirk of the C language.  The specification
-states that the address of a structure is the same as the address of its
-first member (see [ANSI-C, pg.174]).  As a result, if you include the node
-structure as the first item in your own data structure, you can simply pass
-that structure into the module functions.
+states that the address of a structure is the same as the address of its first
+member (see [ANSI-C, pg.174]).  As a result, if you include the node structure
+as the first item in your own data structure, you can simply pass that
+structure into the module functions.
 
 References
 ----------
@@ -66,4 +66,4 @@ Wikipedia::
 
 Timestamp
 ---------
-$Id$
+$Id: README.asciidoc; 2014-10-20 15:33:42 -0500; Christopher R. Hertel$
