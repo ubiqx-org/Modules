@@ -25,7 +25,7 @@
  *
  * -------------------------------------------------------------------------- **
  *
- * $Id: ubi_BinTree.c; 2014-10-20 15:33:42 -0500; Christopher R. Hertel$
+ * $Id: ubi_BinTree.c; 2014-10-20 15:40:32 -0500; Christopher R. Hertel$
  * https://github.com/ubiqx-org/Modules
  *
  * Logs:
@@ -204,7 +204,8 @@
  * Static data.
  */
 
-static char ModuleID[] = "$Id: ubi_BinTree.c; 2014-10-20 15:33:42 -0500; Christopher R. Hertel$\n";
+static char ModuleID[] =
+  "$Id: ubi_BinTree.c; 2014-10-20 15:40:32 -0500; Christopher R. Hertel$\n";
 
 /* ========================================================================== **
  * Internal (private) functions.

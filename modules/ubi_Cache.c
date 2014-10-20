@@ -89,7 +89,7 @@
  *
  * -------------------------------------------------------------------------- **
  *
- * $Id: ubi_Cache.c; 2014-10-20 15:33:42 -0500; Christopher R. Hertel$
+ * $Id: ubi_Cache.c; 2014-10-20 15:40:32 -0500; Christopher R. Hertel$
  * https://github.com/ubiqx-org/Modules
  *
  * Logs:
@@ -121,7 +121,8 @@
  */
 
 /*  commented out until I make use of it...
-static char ModuleID[] = "$Id: ubi_Cache.c; 2014-10-20 15:33:42 -0500; Christopher R. Hertel$\n";
+static char ModuleID[] =
+  "$Id: ubi_Cache.c; 2014-10-20 15:40:32 -0500; Christopher R. Hertel$\n";
 */
 
 /* -------------------------------------------------------------------------- **

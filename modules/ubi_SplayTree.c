@@ -35,7 +35,7 @@
  *
  * -------------------------------------------------------------------------- **
  *
- * $Id: ubi_SplayTree.c; 2014-10-20 15:33:43 -0500; Christopher R. Hertel$
+ * $Id: ubi_SplayTree.c; 2014-10-20 15:40:32 -0500; Christopher R. Hertel$
  * https://github.com/ubiqx-org/Modules
  *
  * Logs:
@@ -168,7 +168,8 @@
  * Static data.
  */
 
-static char ModuleID[] = "$Id: ubi_SplayTree.c; 2014-10-20 15:33:43 -0500; Christopher R. Hertel$\n";
+static char ModuleID[] =
+  "$Id: ubi_SplayTree.c; 2014-10-20 15:40:32 -0500; Christopher R. Hertel$\n";
 
 
 /* ========================================================================== **

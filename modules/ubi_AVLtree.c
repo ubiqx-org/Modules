@@ -30,7 +30,7 @@
  *
  * -------------------------------------------------------------------------- **
  *
- * $Id: ubi_AVLtree.c; 2014-10-20 15:33:42 -0500; Christopher R. Hertel$
+ * $Id: ubi_AVLtree.c; 2014-10-20 15:40:32 -0500; Christopher R. Hertel$
  * https://github.com/ubiqx-org/Modules
  *
  * Logs:
@@ -162,7 +162,8 @@
  * Static data.
  */
 
-static char ModuleID[] = "$Id: ubi_AVLtree.c; 2014-10-20 15:33:42 -0500; Christopher R. Hertel$\n";
+static char ModuleID[] =
+  "$Id: ubi_AVLtree.c; 2014-10-20 15:40:32 -0500; Christopher R. Hertel$\n";
 
 /* ========================================================================== **
  * The next set of functions are the AVL balancing routines.  There are left
