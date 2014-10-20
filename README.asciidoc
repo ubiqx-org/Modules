@@ -57,11 +57,11 @@ References
   0-13-110362-8.
 
 Wikipedia::
-  AVL Tree::
+  AVL Tree;;
     http://en.wikipedia.org/wiki/AVL_tree
-  Binary Tree::
+  Binary Tree;;
     http://en.wikipedia.org/wiki/Binary_tree
-  Splay Tree::
+  Splay Tree;;
     http://en.wikipedia.org/wiki/Splay_tree
 
 Timestamp
