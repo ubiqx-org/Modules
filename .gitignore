@@ -35,3 +35,7 @@
 # Python detritus
 *.pyc
 *.pyo
+
+# Remove if we decide to include the scripts (which are already in the 
+# Carnaval repository).
+/scripts
