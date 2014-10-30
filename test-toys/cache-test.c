@@ -6,7 +6,7 @@
  * -------------------------------------------------------------------------- **
  * Notes:
  *
- *  $Id%
+ *  $Id: cache-test.c; 2014-10-30 11:46:54 -0500; Christopher R. Hertel$
  *  Overhauled to to be more presentable.
  *
  *  Revision 0.0  1997/12/18 05:55:06  crh
