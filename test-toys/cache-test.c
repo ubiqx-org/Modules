@@ -3,9 +3,11 @@
  * -------------------------------------------------------------------------- **
  * License: Public Domain
  * Description: Test the ubiqx splay-cache implementation nasal spray.
- * $Id$
  * -------------------------------------------------------------------------- **
  * Notes:
+ *
+ *  $Id%
+ *  Overhauled to to be more presentable.
  *
  *  Revision 0.0  1997/12/18 05:55:06  crh
  *  Initial Revision.
@@ -196,7 +198,7 @@ static void Usage( char *name )
     "\n\tin-memory cache.  The size of the cache may be limited by",
     "\n\tnumber of entries (entrymax) or by the amount of memory that it",
     "\n\tis allowed to consume (memmax).  A value of zero indicates no",
-    "\n\tno limit.\n",
+    "\n\tlimit.\n",
     "\n\tThe cache may be filled using the unix 'find' command, eg.:",
     "\n\t\tfind / -print 2>/dev/null | %s 0 0",
     "\n\n",
