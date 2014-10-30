@@ -3,7 +3,7 @@
  * -------------------------------------------------------------------------- **
  * License: Public Domain
  * Description: Test the ubiqx splay-cache implementation nasal spray.
- * $Id: cache-test.c; 2014-10-30 11:25:52 -0500; Christopher R. Hertel$
+ * $Id$
  * -------------------------------------------------------------------------- **
  * Notes:
  *
