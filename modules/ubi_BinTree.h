@@ -27,10 +27,18 @@
  *
  * -------------------------------------------------------------------------- **
  *
- * $Id: ubi_BinTree.h; 2014-10-20 15:33:42 -0500; Christopher R. Hertel$
+ * $Id: ubi_BinTree.h; 2014-11-06 17:02:15 -0600; Christopher R. Hertel$
  * https://github.com/ubiqx-org/Modules
  *
  * Logs:
+ *
+ * Revision 4.15  2014/11/6 crh
+ * Updated comments only.
+ *
+ * Revision 4.14  2014/10/30 crh
+ * Overhauled the algorithm used in ubi_btLeafNode().  The new version does
+ * a slightly better job of distributing leaf node selection across the lower
+ * levels of the tree.  At least, it appears to do so in testing.
  *
  * Revision 4.13  2005/10/25 01:51:23  crh
  * Changed the inner workings of the ubi_btTraverse() function.  It is now
@@ -780,34 +788,41 @@ ubi_btNodePtr ubi_btLeafNode( ubi_btNodePtr leader );
    *  Input:  leader  - Pointer to a node at which to start the descent.
    *
    *  Output: A pointer to a leaf node, selected in a somewhat arbitrary
-   *          manner but with an effort to dig deep.
+   *          manner but with an effort to go deep.
    *
-   *  Notes:  I wrote this function because I was using splay trees as a
-   *          database cache.  The cache had a maximum size on it, and I
-   *          needed a way of choosing a node to sacrifice if the cache
-   *          became full.  In a splay tree, less recently accessed nodes
-   *          tend toward the bottom of the tree, meaning that leaf nodes
-   *          are good candidates for removal.  (I really can't think of
-   *          any other reason to use this function.)
+   *          This function returns NULL if <leader> is NULL.
+   *
+   *  Notes:  This function exists primarily because of the ubi_Cache
+   *          module, which uses a splay tree to maintain a simple in-memory
+   *          key->value cache.  The cache may have a maximum entry count
+   *          and/or a maximum memory usage limitation, so there needs to be
+   *          a way of choosing a node to sacrifice if the cache becomes
+   *          full.  In a splay tree, less recently accessed nodes tend
+   *          toward the bottom of the tree, meaning that leaf nodes are very
+   *          good candidates for removal.
+   *
+   *          Unfortunately, it's not enough to take a single path to the
+   *          bottom of the tree to find a candidate for removal.  Splay
+   *          trees are "mostly" balanced, but not completely balanced, and
+   *          there is a possibility that the path down the tree will find a
+   *          leaf node that is very near the top, even in a full-ish tree.
+   *          Not good.
+   *
+   *          This function mitigates the problem by following multiple
+   *          paths down the tree.  Traversing the whole tree would be too
+   *          slow, so we traverse a limited number of paths, returning the
+   *          leaf node at the bottom of the longest path we find.
+   *
    *        + In a simple binary tree, or in an AVL tree, the most recently
-   *          added nodes tend to be nearer the bottom, making this a *bad*
-   *          way to choose which node to remove from the cache.
+   *          added nodes tend to be nearer the bottom.  A cache based on
+   *          one of those tree types should probably be trimmed by removing
+   *          the root node.
+   *
    *        + Randomizing the traversal order is probably a good idea.  You
    *          can improve the randomization of leaf node selection by passing
-   *          in pointers to nodes other than the root node each time.  A
-   *          pointer to any node in the tree will do.  Of course, if you
-   *          pass a pointer to a leaf node you'll get the same thing back.
-   *        + In an unbalanced splay tree, if you simply traverse downward
-   *          until you hit a leaf node it is possible to accidentally
-   *          stumble onto a short path.  The result will be a leaf node
-   *          that is actually very high in the tree--possibly a very
-   *          recently accessed node.  Not good.  This function can follow
-   *          multiple paths in an effort to find a leaf node deeper
-   *          in the tree.  Following a single path, of course, is the
-   *          fastest way to find a leaf node.  A complete traversal would
-   *          be sure to find the deepest leaf but would be very costly in
-   *          terms of time.  This function uses a compromise that has
-   *          worked well in testing.
+   *          in pointers to non-root nodes.  A pointer to any node in the
+   *          tree will do.  Of course, if you pass a pointer to a leaf node
+   *          you'll get the same thing back.
    *
    * ------------------------------------------------------------------------ **
    */

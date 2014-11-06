@@ -25,10 +25,13 @@
  *
  * -------------------------------------------------------------------------- **
  *
- * $Id: ubi_BinTree.c; 2014-10-30 15:43:44 -0500; Christopher R. Hertel$
+ * $Id: ubi_BinTree.c; 2014-11-06 17:02:15 -0600; Christopher R. Hertel$
  * https://github.com/ubiqx-org/Modules
  *
  * Logs:
+ *
+ * Revision 4.15  2014/11/6 crh
+ * Updated comments only.
  *
  * Revision 4.14  2014/10/30 crh
  * Overhauled the algorithm used in ubi_btLeafNode().  The new version does
@@ -210,7 +213,7 @@
  */
 
 static char ModuleID[] =
-  "$Id: ubi_BinTree.c; 2014-10-30 15:43:44 -0500; Christopher R. Hertel$\n";
+  "$Id: ubi_BinTree.c; 2014-11-06 17:02:15 -0600; Christopher R. Hertel$\n";
 
 /* ========================================================================== **
  * Internal (private) functions.
@@ -1151,7 +1154,7 @@ ubi_btNodePtr ubi_btLeafNode( ubi_btNodePtr leader )
   /* Initialize:
    *  The <p[]> array starts with a pointer to the one node we've been given.
    *  Since <p[]> starts with only a single node, the <paths> count is 1.
-   *  Start by looking right when going down the tree.  We'll switch back
+   *  Start by looking left when going down the tree.  We'll switch back
    *  and forth as we wander downward.
    */
   p[0]     = leader;
