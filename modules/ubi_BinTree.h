@@ -3,7 +3,7 @@
 /* ========================================================================== **
  *                              ubi_BinTree.h
  *
- *  Copyright (C) 1991-1998 by Christopher R. Hertel
+ *  Copyright (C) 1991-1998, 2014 by Christopher R. Hertel
  *
  * -------------------------------------------------------------------------- **
  *
@@ -27,12 +27,15 @@
  *
  * -------------------------------------------------------------------------- **
  *
- * $Id: ubi_BinTree.h; 2014-11-06 17:02:15 -0600; Christopher R. Hertel$
+ * $Id: ubi_BinTree.h; 2014-11-19 14:33:47 -0600; Christopher R. Hertel$
  * https://github.com/ubiqx-org/Modules
  *
  * Logs:
  *
- * Revision 4.15  2014/11/6 crh
+ * Revision 4.16  2014/11/19 crh
+ * New code was written, so the copyright dates have been updated.
+ *
+ * Revision 4.15  2014/11/06 crh
  * Updated comments only.
  *
  * Revision 4.14  2014/10/30 crh
