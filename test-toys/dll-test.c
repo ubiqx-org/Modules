@@ -3,7 +3,7 @@
  * -------------------------------------------------------------------------- **
  * License: Public Domain
  * Description: ubiqx doubly-linked-list test program.
- * $Id: dll-test.c; 2014-11-20 18:06:10 -0600; Christopher R. Hertel$
+ * $Id: dll-test.c; 2014-11-20 22:27:46 -0600; Christopher R. Hertel$
  * -------------------------------------------------------------------------- **
  * Notes:
  *  This is a simple test program used to verify the workings of the
@@ -125,7 +125,7 @@ static void printlist( FILE *out, ubi_dlListPtr ListPtr )
     len = ((len > 60) ? 60 : len);
     (void)fprintf( out, " %.*s\n", len, ((EntryPtr)np)->string );
 
-    /* Print out the pointers to the next node, or list end.  */
+    /* Print out the pointers to the next & prev nodes, or list end.  */
     if( np->Next )
       {
       if( np->Next->Prev )
