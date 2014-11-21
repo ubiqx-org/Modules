@@ -3,7 +3,7 @@
  *
  * License: Public Domain
  * Description: A demo/test program for the ubi_sLinkList module.
- * $Id: sll-test.c; 2014-11-20 22:34:12 -0600; Christopher R. Hertel$
+ * $Id: sll-test.c; 2014-11-21 11:04:16 -0600; Christopher R. Hertel$
  * -------------------------------------------------------------------------- **
  * What it does...
  *
@@ -16,7 +16,6 @@
 #include <stdio.h>          /* gets(3), printf(3), etc.         */
 #include <stdlib.h>         /* malloc(3), free(3), etc.         */
 #include <string.h>         /* strlen(3), strcpy(3), etc.       */
-#include "sys_include.h"    /* May help to improve portability. */
 #include "ubi_sLinkList.h"  /* Header for the sLinkList module. */
 
 

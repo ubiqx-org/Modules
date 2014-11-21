@@ -3,7 +3,7 @@
  * -------------------------------------------------------------------------- **
  * License: Public Domain
  * Description: ubiqx doubly-linked-list test program.
- * $Id: dll-test.c; 2014-11-20 22:27:46 -0600; Christopher R. Hertel$
+ * $Id: dll-test.c; 2014-11-21 11:04:16 -0600; Christopher R. Hertel$
  * -------------------------------------------------------------------------- **
  * Notes:
  *  This is a simple test program used to verify the workings of the
@@ -18,7 +18,6 @@
 #include <stdio.h>          /* gets(3), printf(3), etc.         */
 #include <stdlib.h>         /* malloc(3), free(3), etc.         */
 #include <string.h>         /* strlen(3), strcpy(3), etc.       */
-#include "sys_include.h"    /* May help to improve portability. */
 #include "ubi_dLinkList.h"  /* Header for the dLinkList module. */
 
 
