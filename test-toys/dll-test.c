@@ -3,7 +3,7 @@
  * -------------------------------------------------------------------------- **
  * License: Public Domain
  * Description: ubiqx doubly-linked-list test program.
- * $Id: dll-test.c; 2014-11-20 17:53:55 -0600; Christopher R. Hertel$
+ * $Id: dll-test.c; 2014-11-20 18:06:10 -0600; Christopher R. Hertel$
  * -------------------------------------------------------------------------- **
  * Notes:
  *  This is a simple test program used to verify the workings of the
@@ -151,6 +151,15 @@ static void printlist( FILE *out, ubi_dlListPtr ListPtr )
   } /* printlist */
 
 static void usage( const char *progname )
+  /* ------------------------------------------------------------------------ **
+   * Provide a small amount of help, then exit.
+   *
+   *  Input:  progname  - A string, which should be the program name.
+   *
+   *  Output: <none>
+   *
+   * ------------------------------------------------------------------------ **
+   */
   {
   int          i;
   static char *msg[] =
