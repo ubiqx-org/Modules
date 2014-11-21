@@ -1,7 +1,7 @@
 /* ========================================================================== **
  *                              ubi_sLinkList.c
  *
- *  Copyright (C) 1997, 1998 by Christopher R. Hertel
+ *  Copyright (C) 1997, 1998, 2014 by Christopher R. Hertel
  *
  * -------------------------------------------------------------------------- **
  *  This module implements a simple singly-linked list.
@@ -23,10 +23,14 @@
  *
  * -------------------------------------------------------------------------- **
  *
- * $Id: ubi_sLinkList.c; 2014-10-20 15:33:43 -0500; Christopher R. Hertel$
+ * $Id: ubi_sLinkList.c; 2014-11-20 22:26:35 -0600; Christopher R. Hertel$
  * https://github.com/ubiqx-org/Modules
  *
  * Logs:
+ *
+ * Revision 0.11  2014/11/20 crh
+ * Updated some internal comments to remind readers to think very carefully
+ * about how the ubi_slRemoveNext() code works.  Updated the copyright date.
  *
  * Revision 0.10  1999/06/19 16:58:06  crh
  * Renamed the ubi_slRemove() function in ubi_sLinkList to
@@ -167,21 +171,29 @@ ubi_slNodePtr ubi_slRemoveNext( ubi_slListPtr ListPtr, ubi_slNodePtr AfterMe )
    *          AfterMe - Pointer to the node preceeding the node to be
    *                    removed.
    *
-   *  Output: A pointer to the node that was removed, or NULL if the list is
-   *          empty.
+   *  Output: A pointer to the node that was removed, or NULL if no deltion
+   *          occurred.  NULL is returned if the list is already empty, or
+   *          if there is no node following <AfterMe> to be deleted.
    *
    * ------------------------------------------------------------------------ **
    */
   {
   ubi_slNodePtr DelNode;
 
+  /* This next blurp of code is quirky, but it works.
+   * If <AfterMe> is given as NULL, we set it to point to the list header,
+   * casting the list header to be a node header.
+   * Think it through.  It is acceptable within C rules, and it works.
+   */
   AfterMe = AfterMe ? AfterMe : (ubi_slNodePtr)ListPtr;
   DelNode = AfterMe->Next;
+
+  /* If there is a node to delete, delete it. */
   if( DelNode )
     {
     if( !(DelNode->Next) )
       ListPtr->Tail = AfterMe;
-    AfterMe->Next  = DelNode->Next;
+    AfterMe->Next = DelNode->Next;
     (ListPtr->count)--;
     }
   return( DelNode );

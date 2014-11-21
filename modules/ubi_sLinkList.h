@@ -3,7 +3,7 @@
 /* ========================================================================== **
  *                              ubi_sLinkList.h
  *
- *  Copyright (C) 1997, 1998 by Christopher R. Hertel
+ *  Copyright (C) 1997, 1998, 2014 by Christopher R. Hertel
  *
  * -------------------------------------------------------------------------- **
  *  This module implements a simple singly-linked list.
@@ -25,10 +25,14 @@
  *
  * -------------------------------------------------------------------------- **
  *
- * $Id: ubi_sLinkList.h; 2014-10-20 15:33:43 -0500; Christopher R. Hertel$
+ * $Id: ubi_sLinkList.h; 2014-11-20 22:26:35 -0600; Christopher R. Hertel$
  * https://github.com/ubiqx-org/Modules
  *
  * Logs:
+ *
+ * Revision 0.11  2014/11/20 crh
+ * Updated some internal comments to remind readers to think very carefully
+ * about how the ubi_slRemoveNext() code works.  Updated the copyright date.
  *
  * Revision 0.10  1999/06/19 16:58:06  crh
  * Renamed the ubi_slRemove() function in ubi_sLinkList to
@@ -247,8 +251,9 @@ ubi_slNodePtr ubi_slRemoveNext( ubi_slListPtr ListPtr, ubi_slNodePtr AfterMe );
    *          AfterMe - Pointer to the node preceeding the node to be
    *                    removed.
    *
-   *  Output: A pointer to the node that was removed, or NULL if the list is
-   *          empty.
+   *  Output: A pointer to the node that was removed, or NULL if no deltion
+   *          occurred.  NULL is returned if the list is already empty, or
+   *          if there is no node following <AfterMe> to be deleted.
    *
    * ------------------------------------------------------------------------ **
    */
