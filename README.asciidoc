@@ -48,6 +48,16 @@ member (see [ANSI-C, pg.174]).  As a result, if you include the node structure
 as the first item in your own data structure, you can simply pass that
 structure into the module functions.
 
+Compiling
+~~~~~~~~~
+
+A brief guide to some of the more useful make targets:
+
+* *make* - Builds all the test tools and  modules library.
+* *make lib* - Builds the libubiqx.a modules library.
+* *make clean* - Deletes compiled files.
+* *make rebuild* - Deletes compiled files and rebuild everything.
+
 References
 ----------
 
