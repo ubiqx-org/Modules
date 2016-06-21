@@ -53,10 +53,10 @@ Compiling
 
 A brief guide to some of the more useful make targets:
 
-* *make* - Builds all the test tools and  modules library.
-* *make lib* - Builds the libubiqx.a modules library.
-* *make clean* - Deletes compiled files.
-* *make rebuild* - Deletes compiled files and rebuild everything.
+* *`make`* - Builds all of the test tools and the modules library.
+* *`make lib`* - Builds the `libubiqx.a` modules library.
+* *`make clean`* - Deletes compiled files.
+* *`make rebuild`* - Deletes compiled files and rebuild everything.
 
 References
 ----------
@@ -86,4 +86,4 @@ Again, see the individual files for specific license information.
 
 Timestamp
 ---------
-$Id: README.asciidoc; 2014-11-19 14:27:27 -0600; Christopher R. Hertel$
+$Id: README.asciidoc; 2016-06-21 14:18:00 -0500; Christopher R. Hertel$
