@@ -38,7 +38,7 @@
  *   There are limits, though.  Variations in compilers and environments
  *   have made it difficult to write code that just compiles.  In
  *   particular, the location of a definition of NULL seems to be less
- *   than consistant.  See the notes below.
+ *   than consistent.  See the notes below.
  *
  *   This header makes a good attempt to find NULL.  If you find that you
  *   need something more on your system make sure that you keep a copy of
@@ -47,7 +47,7 @@
  *
  * -------------------------------------------------------------------------- **
  *
- * $Id: sys_include.h; 2020-07-27 19:47:22 -0500; Christopher R. Hertel$
+ * $Id: sys_include.h; 2020-07-27 23:29:07 -0500; Christopher R. Hertel$
  * https://github.com/ubiqx-org/Modules
  *
  * Revision 0.0  1998/06/02 02:20:49  crh
@@ -57,7 +57,7 @@
  *//**
  * @file      sys_include.h
  * @author    Christopher R. Hertel
- * @version   $Id: sys_include.h; 2020-07-27 19:47:22 -0500; Christopher R. Hertel$
+ * @version   $Id: sys_include.h; 2020-07-27 23:29:07 -0500; Christopher R. Hertel$
  * @copyright Copyright (C) 1998, 2020 by Christopher R. Hertel
  *
  * @brief     Ensure a correct definition of NULL.
