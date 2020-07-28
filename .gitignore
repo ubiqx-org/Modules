@@ -39,3 +39,6 @@
 # Remove if we decide to include the scripts (which are already in the 
 # Carnaval repository).
 /scripts
+
+# Personal notes file.
+Notes.txt
