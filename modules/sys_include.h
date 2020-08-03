@@ -47,7 +47,7 @@
  *
  * -------------------------------------------------------------------------- **
  *
- * $Id: sys_include.h; 2020-07-27 23:29:07 -0500; Christopher R. Hertel$
+ * $Id: sys_include.h; 2020-08-03 14:19:41 -0500; Christopher R. Hertel$
  * https://github.com/ubiqx-org/Modules
  *
  * Revision 0.0  1998/06/02 02:20:49  crh
@@ -57,7 +57,7 @@
  *//**
  * @file      sys_include.h
  * @author    Christopher R. Hertel
- * @version   $Id: sys_include.h; 2020-07-27 23:29:07 -0500; Christopher R. Hertel$
+ * @version   $Id: sys_include.h; 2020-08-03 14:19:41 -0500; Christopher R. Hertel$
  * @copyright Copyright (C) 1998, 2020 by Christopher R. Hertel
  *
  * @brief     Ensure a correct definition of NULL.
@@ -75,14 +75,13 @@
  *  bet, of course, but there are older compilers still out there thay may
  *  not be compliant.
  *
- *  Also, NULL is supposed to be \c ((void *)0), but I have been informed of
- *  at least one exception existing in the wild.  Weird, eh?
+ *  Also, NULL is supposed to be <tt>((void *)0)</tt>, but I have been
+ *  informed of at least one exception existing in the wild.  Weird, eh?
  *
- *  crh may 1998, updated july 2020.
+ *  crh may 1998, updated august 2020.
  */
 
 /* Just make sure we have a valid NULL, eh? */
-
 #ifndef NULL
 #include <stddef.h>
 #endif
@@ -96,6 +95,11 @@
 #include <locale.h>
 #endif
 #ifndef NULL
+/**
+ * @def   NULL
+ * @brief If all else fails, define NULL as <tt>((void *)0)</tt>.
+ * @hideinitializer
+ */
 #define NULL ((void *)0)
 #endif
 
