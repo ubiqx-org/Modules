@@ -3,7 +3,7 @@
 /* ========================================================================== **
  *                              ubi_BinTree.h
  *
- *  Copyright (C) 1991-1998, 2014 by Christopher R. Hertel
+ *  Copyright (C) 1991-1998, 2014, 2020 by Christopher R. Hertel
  *
  * -------------------------------------------------------------------------- **
  *
@@ -27,10 +27,12 @@
  *
  * -------------------------------------------------------------------------- **
  *
- * $Id: ubi_BinTree.h; 2014-11-19 14:33:47 -0600; Christopher R. Hertel$
+ * $Id: ubi_BinTree.h; 2020-08-03 14:22:06 -0500; Christopher R. Hertel$
  * https://github.com/ubiqx-org/Modules
  *
- * Logs:
+ * Change logs are now in git.
+ *
+ * Old CVS Logs:
  *
  * Revision 4.16  2014/11/19 crh
  * New code was written, so the copyright dates have been updated.
@@ -208,6 +210,25 @@
  *  V0.0 - June, 1991   -  Written by Christopher R. Hertel (CRH).
  *
  * ========================================================================== **
+ *//**
+ * @file    ubi_BinTree.h
+ * @author  Christopher R. Hertel
+ * @brief   Basic Binary Tree implementation.
+ * @date    June 1991
+ * @version $Id: ubi_BinTree.h; 2020-08-03 14:22:06 -0500; Christopher R. Hertel$
+ * @copyright Copyright (C) 1991-1998, 2014, 2020 by Christopher R. Hertel
+ *
+ * @details
+ *  This module implements a simple unbalanced binary tree.
+ *
+ *  Binary trees are an in-memory data structure that can be used to
+ *  maintain a sorted-order collection of key->value pairs.  Key-based
+ *  lookup of individual entries is relatively fast, particularly if the
+ *  tree is balanced.
+ *
+ *  This implementation avoids recursion by using a "parent pointer" to
+ *  point to the parent node in the tree.  This is in addition to the left
+ *  and right child pointers.
  */
 
 #include "sys_include.h"  /* Global include file, used to adapt the ubiqx
@@ -217,54 +238,88 @@
                            */
 
 /* -------------------------------------------------------------------------- **
- * Macros and constants.
+ * Defined Constants.
+ *//**
+ * @def     ubi_trTRUE
+ * @brief   Boolean TRUE.
+ * @details The \c stdbool.h header was not standard when these modules were
+ *          originally written, so it was useful to create our own boolean
+ *          values.
  *
- *  General purpose:
- *    ubi_trTRUE  - Boolean TRUE.
- *    ubi_trFALSE - Boolean FALSE.
+ * @def     ubi_trFALSE
+ * @brief   Boolean FALSE.
+ * @details The \c stdbool.h header was not standard when these modules were
+ *          originally written, so it was useful to create our own boolean
+ *          values.
  *
- *  Flags used in the tree header:
- *    ubi_trOVERWRITE   - This flag indicates that an existing node may be
- *                        overwritten by a new node with a matching key.
- *    ubi_trDUPKEY      - This flag indicates that the tree allows duplicate
- *                        keys.  If the tree does allow duplicates, the
- *                        overwrite flag is ignored.
+ * @def     ubi_trOVERWRITE
+ * @brief   If set, allow overwrite of an existing entry with the same key.
+ * @details If this flag is set in the tree header, an existing node may be
+ *          overwritten by a new node with a matching key.
  *
- *  Node link array index constants:  (Each node has an array of three
- *  pointers.  One to the left, one to the right, and one back to the
- *  parent.)
- *    ubi_trLEFT    - Left child pointer.
- *    ubi_trPARENT  - Parent pointer.
- *    ubi_trRIGHT   - Right child pointer.
- *    ubi_trEQUAL   - Synonym for PARENT.
+ * @def     ubi_trDUPKEY
+ * @brief   If set, allow duplicate keys in the tree.
+ * @details If this flag is set in the tree header, the tree will allow
+ *          duplicate keys.  The \c #ubi_trOVERWRITE flag is ignored if
+ *          duplicate keys are permitted.
  *
- *  ubi_trCompOps:  These values are used in the ubi_trLocate() function.
- *    ubi_trLT  - request the first instance of the greatest key less than
- *                the search key.
- *    ubi_trLE  - request the first instance of the greatest key that is less
- *                than or equal to the search key.
- *    ubi_trEQ  - request the first instance of key that is equal to the
- *                search key.
- *    ubi_trGE  - request the first instance of a key that is greater than
- *                or equal to the search key.
- *    ubi_trGT  - request the first instance of the first key that is greater
- *                than the search key.
- * -------------------------------------------------------------------------- **
+ * @def     ubi_trLEFT
+ * @brief   Left child pointer.
+ * @details Each node has three pointers: left child, parent, and right
+ *          child.  These are kept in an array, and these constants help
+ *          to make it clear which pointer is being accessed.
+ *
+ * @def     ubi_trPARENT
+ * @brief   Parent pointer.
+ * @details Each node has three pointers: left child, parent, and right
+ *          child.  These are kept in an array, and these constants help
+ *          to make it clear which pointer is being accessed.
+ *
+ * @def     ubi_trRIGHT
+ * @brief   Right child pointer.
+ * @details Each node has three pointers: left child, parent, and right
+ *          child.  These are kept in an array, and these constants help
+ *          to make it clear which pointer is being accessed.
+ *
+ * @def     ubi_trEQUAL
+ * @brief   Synonym for \c #ubi_trPARENT.
+ *
+ * @enum  ubi_trCompOps
+ * @brief This set of values is used to specify a search type in
+ *        \c #ubi_trLocate().
+ * @var   ubi_trLT
+ *        Request the first instance of the greatest key less than the search
+ *        search key.
+ * @var   ubi_trLE
+ *        Request the first instance of the greatest key less than or equal
+ *        to the search key.
+ * @var   ubi_trEQ
+ *        Request the first instance of the search key.
+ * @var   ubi_trGE
+ *        Request the first instance of the first key that is greater than
+ *        or equal to the search key.
+ * @var   ubi_trGT
+ *        Request the first instance of the first key that is greater than
+ *        the search key.
  */
 
+/* Boolean values.  */
 #define ubi_trTRUE  0xFF
 #define ubi_trFALSE 0x00
 
-#define ubi_trOVERWRITE 0x01        /* Turn on allow overwrite      */
-#define ubi_trDUPKEY    0x02        /* Turn on allow duplicate keys */
+/* Flags for managing duplicate keys within a tree. */
+#define ubi_trOVERWRITE 0x01
+#define ubi_trDUPKEY    0x02
 
-/* Pointer array index constants... */
+/* Pointer array index constants. */
 #define ubi_trLEFT   0x00
 #define ubi_trPARENT 0x01
 #define ubi_trRIGHT  0x02
 #define ubi_trEQUAL  ubi_trPARENT
 
-typedef enum {
+/* Used for specifying the search type in ubi_trLocate(). */
+typedef enum
+  {
   ubi_trLT = 1,
   ubi_trLE,
   ubi_trEQ,
@@ -272,27 +327,59 @@ typedef enum {
   ubi_trGT
   } ubi_trCompOps;
 
+
 /* -------------------------------------------------------------------------- **
- * These three macros allow simple manipulation of pointer index values (LEFT,
- * RIGHT, and PARENT).
- *
- *    Normalize() -  converts {LEFT, PARENT, RIGHT} into {-1, 0 ,1}.  C
- *                   uses {negative, zero, positive} values to indicate
- *                   {less than, equal to, greater than}.
- *    AbNormal()  -  converts {negative, zero, positive} to {LEFT, PARENT,
- *                   RIGHT} (opposite of Normalize()).  Note: C comparison
- *                   functions, such as strcmp(), return {negative, zero,
- *                   positive} values, which are not necessarily {-1, 0,
- *                   1}.  This macro uses the the ubi_btSgn() function to
- *                   compensate.
- *    RevWay()    -  converts LEFT to RIGHT and RIGHT to LEFT.  PARENT (EQUAL)
- *                   is left as is.
- * -------------------------------------------------------------------------- **
+ * Macros.
  */
 
+/**
+ * These three macros allow simple manipulation of pointer index values (LEFT,
+ * RIGHT, and PARENT).
+ */
+
+/**
+ * @def     ubi_trNormalize( W )
+ * @param   W   One of {\c #ubi_trLEFT, \c #ubi_trPARENT, \c #ubi_trRIGHT}.
+ *              The \p W stands for "way" (as in which \b way to go).
+ * @returns One of {-1, 0, 1}.
+ * @brief   Converts {LEFT, PARENT, RIGHT} into {-1, 0 ,1}.
+ * @details Many standard C functions use {-1, 0, 1} to indicate less than,
+ *          equal to, and greater than.  Arrays, however, are typically
+ *          indexed using unsigned integers.  Yes, you can fudge this but
+ *          it's kinda ugly and this normalization does effectively the
+ *          same thing.
+ * @hideinitializer
+ */
 #define ubi_trNormalize(W) ((char)( (W) - ubi_trEQUAL ))
+
+
+/**
+ * @def     ubi_trAbNormal( W )
+ * @param   W   A signed integer value.
+ * @returns One of {\c #ubi_trLEFT, \c #ubi_trPARENT, \c #ubi_trRIGHT}.
+ * @brief   Returns a directional value to indicate the sign of the input.
+ * @details This macro converts the signed integer to a Left, Parent, or
+ *          Right value so that the correct node pointer can be accessed.
+ *          - Negative input returns \c #ubi_trLEFT.
+ *          - Positive input returns \c #ubi_trRIGHT.
+ *          - Zero (0) returns \c #ubi_trPARENT.
+ *          .
+ *          This is the opposite of \c #ubi_trNormalize().
+ * @see #ubi_trNormalize()
+ * @see #ubi_btSgn()
+ * @hideinitializer
+ */
 #define ubi_trAbNormal(W)  ((char)( ((char)ubi_btSgn( (long)(W) )) \
                                          + ubi_trEQUAL ))
+
+/**
+ * @def     ubi_trRevWay( W )
+ * @param   W   One of {\c #ubi_trLEFT, \c #ubi_trPARENT, \c #ubi_trRIGHT}.
+ * @returns One of {\c #ubi_trRIGHT, \c #ubi_trPARENT, \c #ubi_trLEFT}.
+ * @brief   Reverse the input direction.
+ * @details Converts \c #ubi_trLEFT into \c #ubi_trRIGHT and vice versa.
+ * @hideinitializer
+ */
 #define ubi_trRevWay(W)    ((char)( ubi_trEQUAL - ((W) - ubi_trEQUAL) ))
 
 /* -------------------------------------------------------------------------- **
@@ -301,553 +388,272 @@ typedef enum {
  * -------------------------------------------------------------------------- **
  */
 
-#define ubi_trDups_OK(A) \
-        ((ubi_trDUPKEY & ((A)->flags))?(ubi_trTRUE):(ubi_trFALSE))
-#define ubi_trOvwt_OK(A) \
-        ((ubi_trOVERWRITE & ((A)->flags))?(ubi_trTRUE):(ubi_trFALSE))
+/**
+ * @def     ubi_trDups_OK( Tr )
+ * @param   Tr  Pointer to a tree root (a #ubi_btRoot structure).
+ * @returns Boolean (\c #ubi_trTRUE or \c #ubi_trFALSE).
+ * @brief   Tests whether duplicate entries are permitted in the given tree.
+ * @details \p Tr must point to a previously initialized #ubi_btRoot
+ *          structure.  This macro tests the #ubi_trDUPKEY bit of the
+ *          \c flags field, returning True if the flag is set.
+ * @hideinitializer
+ */
+#define ubi_trDups_OK(Tr) \
+        ((ubi_trDUPKEY & ((Tr)->flags))?(ubi_trTRUE):(ubi_trFALSE))
+
+/**
+ * @def     ubi_trOvwt_OK( Tr )
+ * @param   Tr  Pointer to a tree root (a #ubi_btRoot structure).
+ * @returns Boolean (\c #ubi_trTRUE or \c #ubi_trFALSE).
+ * @brief   Tests whether insertions may overwrite existing nodes.
+ * @details \p Tr must point to a previously initialized #ubi_btRoot
+ *          structure.  This macro tests teh #ubi_trOVERWRITE bit of the
+ *          \c flags field, returning True if the flag is set.
+ * @hideinitializer
+ */
+#define ubi_trOvwt_OK(Tr) \
+        ((ubi_trOVERWRITE & ((Tr)->flags))?(ubi_trTRUE):(ubi_trFALSE))
 
 /* -------------------------------------------------------------------------- **
- * Additional Macros...
- *
- *  ubi_trCount()   - Given a pointer to a tree root, this macro returns the
- *                    number of nodes currently in the tree.
- *
- *  ubi_trNewTree() - This macro makes it easy to declare and initialize a
- *                    tree header in one step.  The line
- *
- *                      static ubi_trNewTree( MyTree, cmpfn, ubi_trDUPKEY );
- *
- *                    is equivalent to
- *
- *                      static ubi_trRoot MyTree[1]
- *                        = {{ NULL, cmpfn, 0, ubi_trDUPKEY }};
- *
+ * Additional Utility Macros.
  * -------------------------------------------------------------------------- **
  */
 
-#define ubi_trCount( R ) (((ubi_trRootPtr)(R))->count)
+/**
+ * @def     ubi_trCount( Tr )
+ * @param   Tr  Pointer to a tree root (a #ubi_btRoot structure).
+ * @returns The number of nodes currently in the tree.
+ * @brief   Shortcut macro; reads the current node count.
+ * @details Reads the current node count from the tree indicated by \p Tr.
+ * @hideinitializer
+ */
+#define ubi_trCount( Tr ) (((ubi_trRootPtr)(Tr))->count)
 
+/**
+ * @def     ubi_trNewTree( N, C, F )
+ * @param   N   New tree name.
+ * @param   C   Comparison function to be used.
+ * @param   F   Flags.
+ * @brief   Shortcut macro; declares and initializes a new binary tree.
+ * @details Creates a new binary tree in one line of code.  The line:
+ *          @code
+ *          static ubi_trNewTree( MyTree, cmpfn, ubi_trDUPKEY );
+ *          @endcode
+ *          is equivalent to:
+ *          @code
+ *          static ubi_trRoot MyTree[1] = {{ NULL, cmpfn, 0, ubi_trDUPKEY }};
+ *          @endcode
+ *          The new node is allocated from the stack.
+ * @hideinitializer
+ */
 #define ubi_trNewTree( N, C, F ) ubi_trRoot (N)[1] = {{ NULL, (C), 0, (F) }}
 
 /* -------------------------------------------------------------------------- **
  * Typedefs...
- *
- * ubi_trBool   - Your typcial true or false...
- *
- * Item Pointer:  The ubi_btItemPtr is a generic pointer. It is used to
- *                indicate a key that is being searched for within the tree.
- *                Searching occurs whenever the ubi_trFind(), ubi_trLocate(),
- *                or ubi_trInsert() functions are called.
  * -------------------------------------------------------------------------- **
  */
 
+/** Pre-standard boolean type.
+ *
+ * Before \c <stdbool.h> was standardized, we had to make our own booleans
+ * from scratch.
+ * @see #ubi_trTRUE, #ubi_trFALSE
+ */
 typedef unsigned char ubi_trBool;
 
+/** Generic key pointer.
+ *
+ * The \c ubi_btItemPtr is a generic pointer type, used in these modules to
+ * indicate a search key when searching within the tree.
+ * @see #ubi_btFind(), #ubi_btLocate(), #ubi_btInsert()
+ */
 typedef void *ubi_btItemPtr;          /* A pointer to key data within a node. */
 
 /*  ------------------------------------------------------------------------- **
  *  Binary Tree Node Structure:  This structure defines the basic elements of
- *       the tree nodes.  In general you *SHOULD NOT PLAY WITH THESE FIELDS*!
- *       But, of course, I have to put the structure into this header so that
- *       you can use it as a building block.
- *
- *  The fields are as follows:
- *    Link     -  an array of pointers.  These pointers are manipulated by
- *                the BT routines.  The pointers indicate the left and right
- *                child nodes and the parent node.  By keeping track of the
- *                parent pointer, we avoid the need for recursive routines or
- *                hand-tooled stacks to keep track of our path back to the
- *                root.  The use of these pointers is subject to change without
- *                notice.
- *    gender   -  a one-byte field indicating whether the node is the RIGHT or
- *                LEFT child of its parent.  If the node is the root of the
- *                tree, gender will be PARENT.
- *    balance  -  only used by the AVL tree module.  This field indicates
- *                the height balance at a given node.  See ubi_AVLtree for
- *                details.
- *
+ *       the tree nodes.  In general you should not directly access these
+ *       fields.  Let the module methods handle the dirty work.
  *  ------------------------------------------------------------------------- **
  */
 
-typedef struct ubi_btNodeStruct {
+/**
+ * @struct  ubi_btNode
+ * @brief   Binary Tree Node structure.
+ * @details There are three pointers, used to link the node to its Left and
+ *          Right children (if any) and to its Parent node.  Only the root
+ *          node of the tree has a NULL parent pointer.  By keeping track of
+ *          the parent pointer, we avoid the need for recursive routines or
+ *          hand-tooled stacks to keep track of our path back to the root.
+ *
+ *          In addition, the node structure keeps track of the "gender" and
+ *          (for AVL trees) "balance" of the node.
+ *
+ * @var ubi_btNode::Link[]
+ *      A set of three pointers to, respectively, the left child, parent,
+ *      and right child nodes.
+ * @var ubi_btNode::gender
+ *      A one-byte field indicating whether the node is the RIGHT or LEFT
+ *      child of its parent.  If the node is the root of the tree, gender
+ *      will be PARENT.
+ * @var ubi_btNode::balance
+ *      Only used by the AVL tree module.  This field indicates the height
+ *      balance at a given node.  Other types of balanced or semi-balanced
+ *      trees (e.g. red-black trees), if implemented, might also make use
+ *      of this field.
+ *      @see ubi_AVLtree.h.
+ */
+typedef struct ubi_btNodeStruct
+  {
   struct ubi_btNodeStruct *Link[ 3 ];
   char                     gender;
   char                     balance;
   } ubi_btNode;
 
-typedef ubi_btNode *ubi_btNodePtr;     /* Pointer to an ubi_btNode structure. */
+/** Pointer to a #ubi_btNode structure.
+ */
+typedef ubi_btNode *ubi_btNodePtr;
 
 /*  ------------------------------------------------------------------------- **
  * The next three typedefs define standard function types used by the binary
- * tree management routines.  In particular:
- *
- *    ubi_btCompFunc    is a pointer to a comparison function.  Comparison
- *                      functions are passed an ubi_btItemPtr and an
- *                      ubi_btNodePtr.  They return a value that is (<0), 0,
- *                      or (>0) to indicate that the Item is (respectively)
- *                      "less than", "equal to", or "greater than" the Item
- *                      contained within the node.  (See ubi_btInitTree()).
- *    ubi_btActionRtn   is a pointer to a function that may be called for each
- *                      node visited when performing a tree traversal (see
- *                      ubi_btTraverse()).  The function will be passed two
- *                      parameters: the first is a pointer to a node in the
- *                      tree, the second is a generic pointer that may point to
- *                      anything that you like.
- *    ubi_btKillNodeRtn is a pointer to a function that will deallocate the
- *                      memory used by a node (see ubi_btKillTree()).  Since
- *                      memory management is left up to you, deallocation may
- *                      mean anything that you want it to mean.  Just remember
- *                      that the tree *will* be destroyed and that none of the
- *                      node pointers will be valid any more.
- *  ------------------------------------------------------------------------- **
+ * tree management routines.
  */
 
+/**
+ * @typedef ubi_btCompFunc
+ * @brief   A a pointer to a comparison function.
+ * @details The sorting and searching of a given tree are based upon a
+ *          comparison function that is associated with the tree when it is
+ *          instantiated.  The comparison function is passed two values:
+ *          a #ubi_btItemPtr and a #ubi_btNodePtr.
+ * @param   #ubi_btItemPtr  A pointer to the search key.
+ * @param   #ubi_btNodePtr  A pointer to a node within the tree.  The node's
+ *          key will be compared against the search key.
+ * @returns The return value of the comparison function must be an unsigned
+ *          integer that is less than, equal to, or greater than zero (0) to
+ *          indicate that the Item is (respectively) less than, equal to, or
+ *          greater than the Item contained within the node.
+ *
+ * @see #ubi_btInitTree()
+ */
 typedef  int (*ubi_btCompFunc)( ubi_btItemPtr, ubi_btNodePtr );
 
+/**
+ * @typedef ubi_btActionRtn
+ * @brief   A pointer to a function to be called for each node visited when
+ *          performing a tree traversal.
+ * @details The function will be passed two parameters: a #ubi_btNodePtr and
+ *          a (<tt>void *</tt>) pointer.
+ * @param   #ubi_btNodePtr  A pointer to a node in the tree.  This is the
+ *                          current node in the traversal.
+ * @param   (void*)         A generic pointer to user data.
+ * @returns No return value (<tt>void</tt>).
+ * @see     #ubi_btTraverse()
+ */
 typedef void (*ubi_btActionRtn)( ubi_btNodePtr, void * );
 
+/**
+ * @typedef ubi_btKillNodeRtn
+ * @brief   A pointer to a function that will deallocate the memory in use
+ *          by a node.
+ * @details This toolkit leaves memory management to the caller.
+ * @param   #ubi_btNodePtr  A pointer to a node that has just been removed
+ *          from the tree.
+ * @returns No return value (<tt>void</tt>).
+ * @see #ubi_btKillTree()
+ */
 typedef void (*ubi_btKillNodeRtn)( ubi_btNodePtr );
 
-/* -------------------------------------------------------------------------- **
- * Tree Root Structure: This structure gives us a convenient handle for
- *                      accessing whole binary trees.  The fields are:
- *    root  -  A pointer to the root node of the tree.
- *    count -  A count of the number of nodes stored in the tree.
- *    cmp   -  A pointer to the comparison routine to be used when building or
- *             searching the tree.
- *    flags -  A set of bit flags.  Two flags are currently defined:
+/**
+ * @struct  ubi_btRoot
+ * @brief   Tree header structure.
+ * @details
+ *  The \c ubi_btRoot structure provides a header for a binary tree.  A new
+ *  binary tree is instantiated by allocating and initializing a
+ *  \c ubi_btRoot.
  *
- *       ubi_trOVERWRITE -  If set, this flag indicates that a new node should
- *         (bit 0x01)       overwrite an old node if the two have identical
- *                          keys (ie., the keys are equal).
- *       ubi_trDUPKEY    -  If set, this flag indicates that the tree is
- *         (bit 0x02)       allowed to contain nodes with duplicate keys.
+ * @var ubi_btRoot::root
+ *      A pointer to the root node of the tree.
+ * @var ubi_btRoot::count
+ *      A count of the number of nodes stored in the tree.
+ * @var ubi_btRoot::cmp
+ *      A pointer to the comparison function to be used when inserting or
+ *      searching for nodes in the tree.
+ * @var ubi_btRoot::flags
+ *      A set of bit flags.  Two flags are currently defined:
+ *      - #ubi_trOVERWRITE
+ *      - #ubi_trDUPKEY
+ *      .
+ *      \c #ubi_trDUPKEY takes priority over \c #ubi_trOVERWRITE.
  *
- *       NOTE: ubi_trInsert() tests ubi_trDUPKEY before ubi_trOVERWRITE.
- *
- * All of these values are set when you initialize the root structure by
- * calling ubi_trInitTree().
- * -------------------------------------------------------------------------- **
+ * @see #ubi_trInitTree().
  */
-
-typedef struct {
+typedef struct
+  {
   ubi_btNodePtr  root;     /* A pointer to the root node of the tree       */
   ubi_btCompFunc cmp;      /* A pointer to the tree's comparison function  */
   unsigned long  count;    /* A count of the number of nodes in the tree   */
   char           flags;    /* Overwrite Y|N, Duplicate keys Y|N...         */
   } ubi_btRoot;
 
-typedef ubi_btRoot *ubi_btRootPtr;  /* Pointer to an ubi_btRoot structure. */
+/** Pointer to an ubi_btRoot structure.
+ */
+typedef ubi_btRoot *ubi_btRootPtr;
 
 
 /* -------------------------------------------------------------------------- **
  * Function Prototypes.
  */
 
-long ubi_btSgn( long x );
-  /* ------------------------------------------------------------------------ **
-   * Return the sign of x; {negative,zero,positive} ==> {-1, 0, 1}.
-   *
-   *  Input:  x - a signed long integer value.
-   *
-   *  Output: the "sign" of x, represented as follows:
-   *            -1 == negative
-   *             0 == zero (no sign)
-   *             1 == positive
-   *
-   * Note: This utility is provided in order to facilitate the conversion
-   *       of C comparison function return values into BinTree direction
-   *       values: {LEFT, PARENT, EQUAL}.  It is INCORPORATED into the
-   *       AbNormal() conversion macro!
-   *
-   * ------------------------------------------------------------------------ **
-   */
+long ubi_btSgn( register long x );
 
 ubi_btNodePtr ubi_btInitNode( ubi_btNodePtr NodePtr );
-  /* ------------------------------------------------------------------------ **
-   * Initialize a tree node.
-   *
-   *  Input:   a pointer to a ubi_btNode structure to be initialized.
-   *  Output:  a pointer to the initialized ubi_btNode structure (ie. the
-   *           same as the input pointer).
-   * ------------------------------------------------------------------------ **
-   */
 
 ubi_btRootPtr  ubi_btInitTree( ubi_btRootPtr   RootPtr,
                                ubi_btCompFunc  CompFunc,
                                char            Flags );
-  /* ------------------------------------------------------------------------ **
-   * Initialize the fields of a Tree Root header structure.
-   *
-   *  Input:   RootPtr   - a pointer to an ubi_btRoot structure to be
-   *                       initialized.
-   *           CompFunc  - a pointer to a comparison function that will be used
-   *                       whenever nodes in the tree must be compared against
-   *                       outside values.
-   *           Flags     - One bytes worth of flags.  Flags include
-   *                       ubi_trOVERWRITE and ubi_trDUPKEY.  See the header
-   *                       file for more info.
-   *
-   *  Output:  a pointer to the initialized ubi_btRoot structure (ie. the
-   *           same value as RootPtr).
-   *
-   *  Note:    The interface to this function has changed from that of
-   *           previous versions.  The <Flags> parameter replaces two
-   *           boolean parameters that had the same basic effect.
-   * ------------------------------------------------------------------------ **
-   */
 
 ubi_trBool ubi_btInsert( ubi_btRootPtr  RootPtr,
                          ubi_btNodePtr  NewNode,
                          ubi_btItemPtr  ItemPtr,
                          ubi_btNodePtr *OldNode );
-  /* ------------------------------------------------------------------------ **
-   * This function uses a non-recursive algorithm to add a new element to the
-   * tree.
-   *
-   *  Input:   RootPtr  -  a pointer to the ubi_btRoot structure that indicates
-   *                       the root of the tree to which NewNode is to be added.
-   *           NewNode  -  a pointer to an ubi_btNode structure that is NOT
-   *                       part of any tree.
-   *           ItemPtr  -  A pointer to the sort key that is stored within
-   *                       *NewNode.  ItemPtr MUST point to information stored
-   *                       in *NewNode or an EXACT DUPLICATE.  The key data
-   *                       indicated by ItemPtr is used to place the new node
-   *                       into the tree.
-   *           OldNode  -  a pointer to an ubi_btNodePtr.  When searching
-   *                       the tree, a duplicate node may be found.  If
-   *                       duplicates are allowed, then the new node will
-   *                       be simply placed into the tree.  If duplicates
-   *                       are not allowed, however, then one of two things
-   *                       may happen.
-   *                       1) if overwritting *is not* allowed, this
-   *                          function will return FALSE (indicating that
-   *                          the new node could not be inserted), and
-   *                          *OldNode will point to the duplicate that is
-   *                          still in the tree.
-   *                       2) if overwritting *is* allowed, then this
-   *                          function will swap **OldNode for *NewNode.
-   *                          In this case, *OldNode will point to the node
-   *                          that was removed (thus allowing you to free
-   *                          the node).
-   *                          **  If you are using overwrite mode, ALWAYS  **
-   *                          ** check the return value of this parameter! **
-   *                 Note: You may pass NULL in this parameter, the
-   *                       function knows how to cope.  If you do this,
-   *                       however, there will be no way to return a
-   *                       pointer to an old (ie. replaced) node (which is
-   *                       a problem if you are using overwrite mode).
-   *
-   *  Output:  a boolean value indicating success or failure.  The function
-   *           will return FALSE if the node could not be added to the tree.
-   *           Such failure will only occur if duplicates are not allowed,
-   *           nodes cannot be overwritten, AND a duplicate key was found
-   *           within the tree.
-   * ------------------------------------------------------------------------ **
-   */
 
 ubi_btNodePtr ubi_btRemove( ubi_btRootPtr RootPtr,
                             ubi_btNodePtr DeadNode );
-  /* ------------------------------------------------------------------------ **
-   * This function removes the indicated node from the tree.
-   *
-   *  Input:   RootPtr  -  A pointer to the header of the tree that contains
-   *                       the node to be removed.
-   *           DeadNode -  A pointer to the node that will be removed.
-   *
-   *  Output:  This function returns a pointer to the node that was removed
-   *           from the tree (ie. the same as DeadNode).
-   *
-   *  Note:    The node MUST be in the tree indicated by RootPtr.  If not,
-   *           strange and evil things will happen to your trees.
-   * ------------------------------------------------------------------------ **
-   */
 
 ubi_btNodePtr ubi_btLocate( ubi_btRootPtr RootPtr,
                             ubi_btItemPtr FindMe,
                             ubi_trCompOps CompOp );
-  /* ------------------------------------------------------------------------ **
-   * The purpose of ubi_btLocate() is to find a node or set of nodes given
-   * a target value and a "comparison operator".  The Locate() function is
-   * more flexible and (in the case of trees that may contain dupicate keys)
-   * more precise than the ubi_btFind() function.  The latter is faster,
-   * but it only searches for exact matches and, if the tree contains
-   * duplicates, Find() may return a pointer to any one of the duplicate-
-   * keyed records.
-   *
-   *  Input:
-   *     RootPtr  -  A pointer to the header of the tree to be searched.
-   *     FindMe   -  An ubi_btItemPtr that indicates the key for which to
-   *                 search.
-   *     CompOp   -  One of the following:
-   *                    CompOp     Return a pointer to the node with
-   *                    ------     ---------------------------------
-   *                   ubi_trLT - the last key value that is less
-   *                              than FindMe.
-   *                   ubi_trLE - the first key matching FindMe, or
-   *                              the last key that is less than
-   *                              FindMe.
-   *                   ubi_trEQ - the first key matching FindMe.
-   *                   ubi_trGE - the first key matching FindMe, or the
-   *                              first key greater than FindMe.
-   *                   ubi_trGT - the first key greater than FindMe.
-   *  Output:
-   *     A pointer to the node matching the criteria listed above under
-   *     CompOp, or NULL if no node matched the criteria.
-   *
-   *  Notes:
-   *     In the case of trees with duplicate keys, Locate() will behave as
-   *     follows:
-   *
-   *     Find:  3                       Find: 3
-   *     Keys:  1 2 2 2 3 3 3 3 3 4 4   Keys: 1 1 2 2 2 4 4 5 5 5 6
-   *                  ^ ^         ^                   ^ ^
-   *                 LT EQ        GT                 LE GE
-   *
-   *     That is, when returning a pointer to a node with a key that is LESS
-   *     THAN the target key (FindMe), Locate() will return a pointer to the
-   *     LAST matching node.
-   *     When returning a pointer to a node with a key that is GREATER
-   *     THAN the target key (FindMe), Locate() will return a pointer to the
-   *     FIRST matching node.
-   *
-   *  See Also: ubi_btFind(), ubi_btFirstOf(), ubi_btLastOf().
-   * ------------------------------------------------------------------------ **
-   */
 
 ubi_btNodePtr ubi_btFind( ubi_btRootPtr RootPtr,
                           ubi_btItemPtr FindMe );
-  /* ------------------------------------------------------------------------ **
-   * This function performs a non-recursive search of a tree for any node
-   * matching a specific key.
-   *
-   *  Input:
-   *     RootPtr  -  a pointer to the header of the tree to be searched.
-   *     FindMe   -  a pointer to the key value for which to search.
-   *
-   *  Output:
-   *     A pointer to a node with a key that matches the key indicated by
-   *     FindMe, or NULL if no such node was found.
-   *
-   *  Note:   In a tree that allows duplicates, the pointer returned *might
-   *          not* point to the (sequentially) first occurance of the
-   *          desired key.  In such a tree, it may be more useful to use
-   *          ubi_btLocate().
-   * ------------------------------------------------------------------------ **
-   */
 
 ubi_btNodePtr ubi_btNext( ubi_btNodePtr P );
-  /* ------------------------------------------------------------------------ **
-   * Given the node indicated by P, find the (sorted order) Next node in the
-   * tree.
-   *  Input:   P  -  a pointer to a node that exists in a binary tree.
-   *  Output:  A pointer to the "next" node in the tree, or NULL if P pointed
-   *           to the "last" node in the tree or was NULL.
-   * ------------------------------------------------------------------------ **
-   */
 
 ubi_btNodePtr ubi_btPrev( ubi_btNodePtr P );
-  /* ------------------------------------------------------------------------ **
-   * Given the node indicated by P, find the (sorted order) Previous node in
-   * the tree.
-   *  Input:   P  -  a pointer to a node that exists in a binary tree.
-   *  Output:  A pointer to the "previous" node in the tree, or NULL if P
-   *           pointed to the "first" node in the tree or was NULL.
-   * ------------------------------------------------------------------------ **
-   */
 
 ubi_btNodePtr ubi_btFirst( ubi_btNodePtr P );
-  /* ------------------------------------------------------------------------ **
-   * Given the node indicated by P, find the (sorted order) First node in the
-   * subtree of which *P is the root.
-   *  Input:   P  -  a pointer to a node that exists in a binary tree.
-   *  Output:  A pointer to the "first" node in a subtree that has *P as its
-   *           root.  This function will return NULL only if P is NULL.
-   *  Note:    In general, you will be passing in the value of the root field
-   *           of an ubi_btRoot structure.
-   * ------------------------------------------------------------------------ **
-   */
 
 ubi_btNodePtr ubi_btLast( ubi_btNodePtr P );
-  /* ------------------------------------------------------------------------ **
-   * Given the node indicated by P, find the (sorted order) Last node in the
-   * subtree of which *P is the root.
-   *  Input:   P  -  a pointer to a node that exists in a binary tree.
-   *  Output:  A pointer to the "last" node in a subtree that has *P as its
-   *           root.  This function will return NULL only if P is NULL.
-   *  Note:    In general, you will be passing in the value of the root field
-   *           of an ubi_btRoot structure.
-   * ------------------------------------------------------------------------ **
-   */
 
 ubi_btNodePtr ubi_btFirstOf( ubi_btRootPtr RootPtr,
                              ubi_btItemPtr MatchMe,
                              ubi_btNodePtr p );
-  /* ------------------------------------------------------------------------ **
-   * Given a tree that a allows duplicate keys, and a pointer to a node in
-   * the tree, this function will return a pointer to the first (traversal
-   * order) node with the same key value.
-   *
-   *  Input:  RootPtr - A pointer to the root of the tree.
-   *          MatchMe - A pointer to the key value.  This should probably
-   *                    point to the key within node *p.
-   *          p       - A pointer to a node in the tree.
-   *  Output: A pointer to the first node in the set of nodes with keys
-   *          matching <FindMe>.
-   *  Notes:  Node *p MUST be in the set of nodes with keys matching
-   *          <FindMe>.  If not, this function will return NULL.
-   *
-   *          4.7: Bug found & fixed by Massimo Campostrini,
-   *               Istituto Nazionale di Fisica Nucleare, Sezione di Pisa.
-   *
-   * ------------------------------------------------------------------------ **
-   */
 
 ubi_btNodePtr ubi_btLastOf( ubi_btRootPtr RootPtr,
                             ubi_btItemPtr MatchMe,
                             ubi_btNodePtr p );
-  /* ------------------------------------------------------------------------ **
-   * Given a tree that a allows duplicate keys, and a pointer to a node in
-   * the tree, this function will return a pointer to the last (traversal
-   * order) node with the same key value.
-   *
-   *  Input:  RootPtr - A pointer to the root of the tree.
-   *          MatchMe - A pointer to the key value.  This should probably
-   *                    point to the key within node *p.
-   *          p       - A pointer to a node in the tree.
-   *  Output: A pointer to the last node in the set of nodes with keys
-   *          matching <FindMe>.
-   *  Notes:  Node *p MUST be in the set of nodes with keys matching
-   *          <FindMe>.  If not, this function will return NULL.
-   *
-   *          4.7: Bug found & fixed by Massimo Campostrini,
-   *               Istituto Nazionale di Fisica Nucleare, Sezione di Pisa.
-   *
-   * ------------------------------------------------------------------------ **
-   */
 
 unsigned long ubi_btTraverse( ubi_btRootPtr   RootPtr,
                               ubi_btActionRtn EachNode,
                               void           *UserData );
-  /* ------------------------------------------------------------------------ **
-   * Traverse a tree in sorted order (non-recursively).  At each node, call
-   * (*EachNode)(), passing a pointer to the current node, and UserData as the
-   * second parameter.
-   *
-   *  Input:   RootPtr  -  a pointer to an ubi_btRoot structure that indicates
-   *                       the tree to be traversed.
-   *           EachNode -  a pointer to a function to be called at each node
-   *                       as the node is visited.
-   *           UserData -  a generic pointer that may point to anything that
-   *                       you choose.
-   *
-   *  Output:  A count of the number of nodes visited.  This will be zero
-   *           if the tree is empty.
-   *
-   *  Notes:   It is now safe to delete nodes during a traversal using this
-   *           function.  Previously, it was assumed that the call to
-   *           *EachNode() would not disturb the tree, but I got several
-   *           e'mails from people who were trying to delete or re-insert
-   *           nodes during the traversal.  That didn't work, because the
-   *           next node in the sequence was found *after* the call to the
-   *           user-supplied function.  Recipe for disaster.
-   *
-   *           Traverse now looks ahead to find the next node before it
-   *           calls the user-supplied *EachNode() function, which is safer.
-   *
-   * ------------------------------------------------------------------------ **
-   */
-
 
 unsigned long ubi_btKillTree( ubi_btRootPtr     RootPtr,
                               ubi_btKillNodeRtn FreeNode );
-  /* ------------------------------------------------------------------------ **
-   * Delete an entire tree (non-recursively) and reinitialize the ubi_btRoot
-   * structure.  Return a count of the number of nodes deleted.
-   *
-   *  Input:   RootPtr  -  a pointer to an ubi_btRoot structure that indicates
-   *                       the root of the tree to delete.
-   *           FreeNode -  a function that will be called for each node in the
-   *                       tree to deallocate the memory used by the node.
-   *
-   *  Output:  The number of nodes removed from the tree.
-   *           A value of 0 will be returned if:
-   *           - The tree actually contains 0 entries.
-   *           - the value of <RootPtr> is NULL, in which case the tree is
-   *             assumed to be empty
-   *           - the value of <FreeNode> is NULL, in which case entries
-   *             cannot be removed, so 0 is returned.  *Make sure that you
-   *             provide a valid value for <FreeNode>*.
-   *           In all other cases, you should get a positive value equal to
-   *           the value of RootPtr->count upon entry.
-   *
-   * ------------------------------------------------------------------------ **
-   */
 
 ubi_btNodePtr ubi_btLeafNode( ubi_btNodePtr leader );
-  /* ------------------------------------------------------------------------ **
-   * Returns a pointer to a leaf node.
-   *
-   *  Input:  leader  - Pointer to a node at which to start the descent.
-   *
-   *  Output: A pointer to a leaf node, selected in a somewhat arbitrary
-   *          manner but with an effort to go deep.
-   *
-   *          This function returns NULL if <leader> is NULL.
-   *
-   *  Notes:  This function exists primarily because of the ubi_Cache
-   *          module, which uses a splay tree to maintain a simple in-memory
-   *          key->value cache.  The cache may have a maximum entry count
-   *          and/or a maximum memory usage limitation, so there needs to be
-   *          a way of choosing a node to sacrifice if the cache becomes
-   *          full.  In a splay tree, less recently accessed nodes tend
-   *          toward the bottom of the tree, meaning that leaf nodes are very
-   *          good candidates for removal.
-   *
-   *          Unfortunately, it's not enough to take a single path to the
-   *          bottom of the tree to find a candidate for removal.  Splay
-   *          trees are "mostly" balanced, but not completely balanced, and
-   *          there is a possibility that the path down the tree will find a
-   *          leaf node that is very near the top, even in a full-ish tree.
-   *          Not good.
-   *
-   *          This function mitigates the problem by following multiple
-   *          paths down the tree.  Traversing the whole tree would be too
-   *          slow, so we traverse a limited number of paths, returning the
-   *          leaf node at the bottom of the longest path we find.
-   *
-   *        + In a simple binary tree, or in an AVL tree, the most recently
-   *          added nodes tend to be nearer the bottom.  A cache based on
-   *          one of those tree types should probably be trimmed by removing
-   *          the root node.
-   *
-   *        + Randomizing the traversal order is probably a good idea.  You
-   *          can improve the randomization of leaf node selection by passing
-   *          in pointers to non-root nodes.  A pointer to any node in the
-   *          tree will do.  Of course, if you pass a pointer to a leaf node
-   *          you'll get the same thing back.
-   *
-   * ------------------------------------------------------------------------ **
-   */
-
 
 int ubi_btModuleID( int size, char *list[] );
-  /* ------------------------------------------------------------------------ **
-   * Returns a set of strings that identify the module.
-   *
-   *  Input:  size  - The number of elements in the array <list>.
-   *          list  - An array of pointers of type (char *).  This array
-   *                  should, initially, be empty.  This function will fill
-   *                  in the array with pointers to strings.
-   *  Output: The number of elements of <list> that were used.  If this value
-   *          is less than <size>, the values of the remaining elements are
-   *          not guaranteed.
-   *
-   *  Notes:  Please keep in mind that the pointers returned indicate strings
-   *          stored in static memory.  Don't free() them, don't write over
-   *          them, etc.  Just read them.
-   * ------------------------------------------------------------------------ **
-   */
+
 
 /* -------------------------------------------------------------------------- **
  * Masquarade...
@@ -856,6 +662,81 @@ int ubi_btModuleID( int size, char *list[] );
  * implemented binary tree modules (currently BinTree, AVLtree, and SplayTree).
  * Instead of using ubi_bt..., use ubi_tr..., and select the tree type by
  * including the appropriate module header.
+ *//**
+ * @def   ubi_trItemPtr
+ * @brief Alias for #ubi_btItemPtr
+ *
+ * @def   ubi_trNode
+ * @brief Alias for #ubi_btNode
+ *
+ * @def   ubi_trNodePtr
+ * @brief Alias for #ubi_btNodePtr
+ *
+ * @def   ubi_trRoot
+ * @brief Alias for #ubi_btRoot
+ *
+ * @def   ubi_trRootPtr
+ * @brief Alias for #ubi_btRootPtr
+ *
+ * @def   ubi_trCompFunc
+ * @brief Alias for #ubi_btCompFunc
+ *
+ * @def   ubi_trActionRtn
+ * @brief Alias for #ubi_btActionRtn
+ *
+ * @def   ubi_trKillNodeRtn
+ * @brief Alias for #ubi_btKillNodeRtn
+ *
+ * @def   ubi_trSgn
+ * @brief Alias for #ubi_btSgn
+ *
+ * @def   ubi_trInitNode
+ * @brief Alias for #ubi_btInitNode
+ *
+ * @def   ubi_trInitTree
+ * @brief Alias for #ubi_btInitTree
+ *
+ * @def   ubi_trInsert
+ * @brief Alias for #ubi_btInsert
+ *
+ * @def   ubi_trRemove
+ * @brief Alias for #ubi_btRemove
+ *
+ * @def   ubi_trLocate
+ * @brief Alias for #ubi_btLocate
+ *
+ * @def   ubi_trFind
+ * @brief Alias for #ubi_btFind
+ *
+ * @def   ubi_trNext
+ * @brief Alias for #ubi_btNext
+ *
+ * @def   ubi_trPrev
+ * @brief Alias for #ubi_btPrev
+ *
+ * @def   ubi_trFirst
+ * @brief Alias for #ubi_btFirst
+ *
+ * @def   ubi_trLast
+ * @brief Alias for #ubi_btLast
+ *
+ * @def   ubi_trFirstOf
+ * @brief Alias for #ubi_btFirstOf
+ *
+ * @def   ubi_trLastOf
+ * @brief Alias for #ubi_btLastOf
+ *
+ * @def   ubi_trTraverse
+ * @brief Alias for #ubi_btTraverse
+ *
+ * @def   ubi_trKillTree
+ * @brief Alias for #ubi_btKillTree
+ *
+ * @def   ubi_trLeafNode
+ * @brief Alias for #ubi_btLeafNode
+ *
+ * @def   ubi_trModuleID
+ * @brief Alias for #ubi_btModuleID
  */
 
 #define ubi_trItemPtr ubi_btItemPtr
