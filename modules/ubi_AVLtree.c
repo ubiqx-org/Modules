@@ -1,12 +1,12 @@
 /* ========================================================================== **
  *                              ubi_AVLtree.c
  *
- *  Copyright (C) 1991-1998 by Christopher R. Hertel
+ *  Copyright (C) 1990-1998, 2020 by Christopher R. Hertel
  *
  * -------------------------------------------------------------------------- **
  *
  *  This module provides an implementation of AVL height balanced binary
- *  trees.  (Adelson-Velskii, Landis 1962)
+ *  trees.  (Adelson-Velsky, Landis 1962)
  *
  *  This file implements the core of the height-balanced (AVL) tree management
  *  routines.  The header file, ubi_AVLtree.h, contains function prototypes
@@ -30,10 +30,12 @@
  *
  * -------------------------------------------------------------------------- **
  *
- * $Id: ubi_AVLtree.c; 2014-10-20 15:40:32 -0500; Christopher R. Hertel$
+ * $Id: ubi_AVLtree.c; 2020-08-04 12:12:39 -0500; Christopher R. Hertel$
  * https://github.com/ubiqx-org/Modules
  *
- * Logs:
+ * Change logs are now in git.
+ *
+ * Old CVS Logs:
  *
  * Revision 4.5  2000/01/31 05:21:17  crh
  * Made checks for NULL more explicit in a few places.
@@ -163,7 +165,7 @@
  */
 
 static char ModuleID[] =
-  "$Id: ubi_AVLtree.c; 2014-10-20 15:40:32 -0500; Christopher R. Hertel$\n";
+  "$Id: ubi_AVLtree.c; 2020-08-04 12:12:39 -0500; Christopher R. Hertel$\n";
 
 /* ========================================================================== **
  * The next set of functions are the AVL balancing routines.  There are left
@@ -469,49 +471,49 @@ ubi_trBool ubi_avlInsert( ubi_btRootPtr  RootPtr,
                           ubi_btNodePtr  NewNode,
                           ubi_btItemPtr  ItemPtr,
                           ubi_btNodePtr *OldNode )
-  /* ------------------------------------------------------------------------ **
-   * This function uses a non-recursive algorithm to add a new element to
-   * the tree.
+  /** Add a node to an AVL height-balanced tree.
    *
-   *  Input:   RootPtr  -  a pointer to the ubi_btRoot structure that indicates
-   *                       the root of the tree to which NewNode is to be added.
-   *           NewNode  -  a pointer to an ubi_btNode structure that is NOT
-   *                       part of any tree.
-   *           ItemPtr  -  A pointer to the sort key that is stored within
-   *                       *NewNode.  ItemPtr MUST point to information stored
-   *                       in *NewNode or an EXACT DUPLICATE.  The key data
-   *                       indicated by ItemPtr is used to place the new node
-   *                       into the tree.
-   *           OldNode  -  a pointer to an ubi_btNodePtr.  When searching
-   *                       the tree, a duplicate node may be found.  If
-   *                       duplicates are allowed, then the new node will
-   *                       be simply placed into the tree.  If duplicates
-   *                       are not allowed, however, then one of two things
-   *                       may happen.
-   *                       1) if overwritting *is not* allowed, this
-   *                          function will return FALSE (indicating that
-   *                          the new node could not be inserted), and
-   *                          *OldNode will point to the duplicate that is
-   *                          still in the tree.
-   *                       2) if overwritting *is* allowed, then this
-   *                          function will swap **OldNode for *NewNode.
-   *                          In this case, *OldNode will point to the node
-   *                          that was removed (thus allowing you to free
-   *                          the node).
-   *                          **  If you are using overwrite mode, ALWAYS  **
-   *                          ** check the return value of this parameter! **
-   *                 Note: You may pass NULL in this parameter, the
-   *                       function knows how to cope.  If you do this,
-   *                       however, there will be no way to return a
-   *                       pointer to an old (ie. replaced) node (which is
-   *                       a problem if you are using overwrite mode).
+   * Non-recursively add a new node to the tree specified by \p RootPtr.
    *
-   *  Output:  a boolean value indicating success or failure.  The function
-   *           will return FALSE if the node could not be added to the tree.
-   *           Such failure will only occur if duplicates are not allowed,
-   *           nodes cannot be overwritten, AND a duplicate key was found
-   *           within the tree.
-   * ------------------------------------------------------------------------ **
+   * @param   RootPtr   A pointer to the #ubi_btRoot structure that indicates
+   *                    the root of the tree to which \p NewNode is to be
+   *                    added.
+   * @param   NewNode   A pointer to a #ubi_btNode structure that is \b not
+   *                    yet part of any tree.
+   * @param   ItemPtr   A pointer to the sort key that is stored within
+   *                    \p NewNode.  \p ItemPtr MUST point to the key stored
+   *                    in \p NewNode (or an exact duplicate).  The key
+   *                    indicated by \p ItemPtr is used to place the new
+   *                    node into the correct location within the tree.
+   * @param   OldNode   A pointer to a #ubi_btNodePtr (a pointer to a
+   *                    pointer to a node).  When searching the tree, a
+   *                    duplicate node may be found.  If duplicates are
+   *                    allowed, then the new node will just be added to the
+   *                    tree.  If duplicates are not allowed, then one of
+   *                    two things may happen:
+   *                    1.  If overwritting <i>is not</i> allowed, this
+   *                        function will return FALSE (indicating that
+   *                        the new node could not be inserted), and
+   *                        \p *OldNode will point to the duplicate that
+   *                        is still in the tree.
+   *                    2.  If overwritting \e is allowed, then this
+   *                        function will swap \p *OldNode for \p NewNode.
+   *                        In this case, \p *OldNode will point to the node
+   *                        that was removed (thus allowing the node to be
+   *                        freed).\n
+   *                        - If you are using overwrite mode, always check
+   *                          the return value of this parameter.
+   *                        - You may pass NULL in this parameter, the
+   *                          function knows how to cope.  If you do so,
+   *                          however, there will be no way to return a
+   *                          pointer to an old (ie. replaced) node.
+   *
+   * @returns   A boolean value indicating success or failure.  FALSE is
+   *            returned if the node could not be added to the tree.
+   *            Such failure will only occur if
+   *            - duplicates are not allowed,
+   *            - nodes cannot be overwritten, \e and
+   *            - a duplicate key was found within the tree.
    */
   {
   ubi_btNodePtr OtherP;
@@ -539,21 +541,21 @@ ubi_trBool ubi_avlInsert( ubi_btRootPtr  RootPtr,
 
 ubi_btNodePtr ubi_avlRemove( ubi_btRootPtr  RootPtr,
                              ubi_btNodePtr  DeadNode )
-  /* ------------------------------------------------------------------------ **
-   * This function removes the indicated node from the tree, after which the
-   * tree is rebalanced.
+  /** Remove the indicated node from the AVL tree.
    *
-   *  Input:  RootPtr  -  A pointer to the header of the tree that contains
-   *                      the node to be removed.
-   *          DeadNode -  A pointer to the node that will be removed.
+   * After the node is removed, the tree is rebalanced.
    *
-   *  Output: This function returns a pointer to the node that was removed
+   * @param   RootPtr   A pointer to the header of the tree that contains
+   *                    the node to be removed.
+   * @param   DeadNode  A pointer to the node that will be removed.
+   *
+   * @returns This function returns a pointer to the node that was removed
    *          from the tree (ie. the same as DeadNode).
    *
-   *  Note:   The node MUST be in the tree indicated by RootPtr.  If not,
-   *          strange and evil things will happen to your trees.
-   *
-   * ------------------------------------------------------------------------ **
+   * \b Note
+   *  - The node MUST be in the tree indicated by \p RootPtr.  If not,
+   *    strange and evil things will happen to your trees, and the
+   *    forest will fall under an evil spell.
    */
   {
   /* Let the base binary tree module do the removal, then rebalance. */
@@ -565,21 +567,20 @@ ubi_btNodePtr ubi_avlRemove( ubi_btRootPtr  RootPtr,
   } /* ubi_avlRemove */
 
 int ubi_avlModuleID( int size, char *list[] )
-  /* ------------------------------------------------------------------------ **
-   * Returns a set of strings that identify the module.
+  /** Return a set of strings that identify the module.
    *
-   *  Input:  size  - The number of elements in the array <list>.
-   *          list  - An array of pointers of type (char *).  This array
-   *                  should, initially, be empty.  This function will fill
-   *                  in the array with pointers to strings.
-   *  Output: The number of elements of <list> that were used.  If this value
-   *          is less than <size>, the values of the remaining elements are
-   *          not guaranteed.
+   * @param   size  The number of elements in the array \p list.
+   * @param   list  An array of pointers of type <tt>(char *)</tt>.  The
+   *                function will fill in the array with pointers to
+   *                strings.
    *
-   *  Notes:  Please keep in mind that the pointers returned indicate strings
-   *          stored in static memory.  Don't free() them, don't write over
-   *          them, etc.  Just read them.
-   * ------------------------------------------------------------------------ **
+   * @returns   The number of elements of \p list that were used.
+   *
+   * \b Notes
+   *  - The indicated strings are stored in static space and must not be
+   *    freed or overwritten.  You know the drill.
+   *  - If there are unused entries available in \p list, the first unused
+   *    entry will be set to NULL to indicate the end of the list.
    */
   {
   if( size > 0 )

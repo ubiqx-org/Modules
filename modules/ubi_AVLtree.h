@@ -3,12 +3,12 @@
 /* ========================================================================== **
  *                              ubi_AVLtree.h
  *
- *  Copyright (C) 1991-1998 by Christopher R. Hertel
+ *  Copyright (C) 1990-1998, 2020 by Christopher R. Hertel
  *
  * -------------------------------------------------------------------------- **
  *
  *  This module provides an implementation of AVL height balanced binary
- *  trees.  (Adelson-Velskii, Landis 1962)
+ *  trees.  (Adelson-Velsky, Landis 1962)
  *
  *  This header file contains the basic AVL structure and pointer typedefs
  *  as well as the prototypes needed to access the functions in the AVL
@@ -34,10 +34,12 @@
  *
  * -------------------------------------------------------------------------- **
  *
- * $Id: ubi_AVLtree.h; 2014-10-20 15:33:42 -0500; Christopher R. Hertel$
+ * $Id: ubi_AVLtree.h; 2020-08-04 12:12:39 -0500; Christopher R. Hertel$
  * https://github.com/ubiqx-org/Modules
  *
- * Logs:
+ * Change logs are now in git.
+ *
+ * Old CVS Logs:
  *
  * Revision 4.5  2000/01/31 05:21:17  crh
  * Made checks for NULL more explicit in a few places.
@@ -158,9 +160,25 @@
  *  V0.0 - May, 1990   -  Written by Christopher R. Hertel (CRH).
  *
  *  ========================================================================= **
+ *//**
+ * @file    ubi_AVLtree.h
+ * @author  Christopher R. Hertel
+ * @brief   AVL Height Balanced Tree implementation.
+ * @date    May 1990
+ * @version $Id: ubi_AVLtree.h; 2020-08-04 12:12:39 -0500; Christopher R. Hertel$
+ * @copyright Copyright (C) 1990-1998, 2014, 2020 by Christopher R. Hertel
+ *
+ * @details
+ *  This AVL Tree implementation is descendent from the ubi_BinTree
+ *  implementation of simple (unbalanced) binary trees.  Including the
+ *  \c "ubi_AVLtree.h" header provides access to the AVL balancing
+ *  functionality.
+ *
+ * @see https://en.wikipedia.org/wiki/AVL_tree
  */
 
-#include "ubi_BinTree.h"   /* Base erg binary tree support.       */
+#include "ubi_BinTree.h"   /* Base binary tree support. */
+
 
 /* -------------------------------------------------------------------------- **
  *  Function prototypes.
@@ -171,86 +189,12 @@ ubi_trBool ubi_avlInsert( ubi_btRootPtr  RootPtr,
                           ubi_btNodePtr  NewNode,
                           ubi_btItemPtr  ItemPtr,
                           ubi_btNodePtr *OldNode );
-  /* ------------------------------------------------------------------------ **
-   * This function uses a non-recursive algorithm to add a new element to
-   * the tree.
-   *
-   *  Input:   RootPtr  -  a pointer to the ubi_btRoot structure that indicates
-   *                       the root of the tree to which NewNode is to be added.
-   *           NewNode  -  a pointer to an ubi_btNode structure that is NOT
-   *                       part of any tree.
-   *           ItemPtr  -  A pointer to the sort key that is stored within
-   *                       *NewNode.  ItemPtr MUST point to information stored
-   *                       in *NewNode or an EXACT DUPLICATE.  The key data
-   *                       indicated by ItemPtr is used to place the new node
-   *                       into the tree.
-   *           OldNode  -  a pointer to an ubi_btNodePtr.  When searching
-   *                       the tree, a duplicate node may be found.  If
-   *                       duplicates are allowed, then the new node will
-   *                       be simply placed into the tree.  If duplicates
-   *                       are not allowed, however, then one of two things
-   *                       may happen.
-   *                       1) if overwritting *is not* allowed, this
-   *                          function will return FALSE (indicating that
-   *                          the new node could not be inserted), and
-   *                          *OldNode will point to the duplicate that is
-   *                          still in the tree.
-   *                       2) if overwritting *is* allowed, then this
-   *                          function will swap **OldNode for *NewNode.
-   *                          In this case, *OldNode will point to the node
-   *                          that was removed (thus allowing you to free
-   *                          the node).
-   *                          **  If you are using overwrite mode, ALWAYS  **
-   *                          ** check the return value of this parameter! **
-   *                 Note: You may pass NULL in this parameter, the
-   *                       function knows how to cope.  If you do this,
-   *                       however, there will be no way to return a
-   *                       pointer to an old (ie. replaced) node (which is
-   *                       a problem if you are using overwrite mode).
-   *
-   *  Output:  a boolean value indicating success or failure.  The function
-   *           will return FALSE if the node could not be added to the tree.
-   *           Such failure will only occur if duplicates are not allowed,
-   *           nodes cannot be overwritten, AND a duplicate key was found
-   *           within the tree.
-   * ------------------------------------------------------------------------ **
-   */
 
 ubi_btNodePtr ubi_avlRemove( ubi_btRootPtr RootPtr,
                              ubi_btNodePtr DeadNode );
-  /* ------------------------------------------------------------------------ **
-   * This function removes the indicated node from the tree, after which the
-   * tree is rebalanced.
-   *
-   *  Input:  RootPtr  -  A pointer to the header of the tree that contains
-   *                      the node to be removed.
-   *          DeadNode -  A pointer to the node that will be removed.
-   *
-   *  Output: This function returns a pointer to the node that was removed
-   *          from the tree (ie. the same as DeadNode).
-   *
-   *  Note:   The node MUST be in the tree indicated by RootPtr.  If not,
-   *          strange and evil things will happen to your trees.
-   * ------------------------------------------------------------------------ **
-   */
 
 int ubi_avlModuleID( int size, char *list[] );
-  /* ------------------------------------------------------------------------ **
-   * Returns a set of strings that identify the module.
-   *
-   *  Input:  size  - The number of elements in the array <list>.
-   *          list  - An array of pointers of type (char *).  This array
-   *                  should, initially, be empty.  This function will fill
-   *                  in the array with pointers to strings.
-   *  Output: The number of elements of <list> that were used.  If this value
-   *          is less than <size>, the values of the remaining elements are
-   *          not guaranteed.
-   *
-   *  Notes:  Please keep in mind that the pointers returned indicate strings
-   *          stored in static memory.  Don't free() them, don't write over
-   *          them, etc.  Just read them.
-   * ------------------------------------------------------------------------ **
-   */
+
 
 /* -------------------------------------------------------------------------- **
  * Masquarade...
@@ -259,6 +203,15 @@ int ubi_avlModuleID( int size, char *list[] );
  * implemented binary tree modules (currently BinTree, AVLtree, and SplayTree).
  * Instead of using ubi_avl... or ubi_bt, use ubi_tr... and select the tree
  * type by including the appropriate module header.
+ *//**
+ * @def   ubi_trInsert
+ * @brief Alias for #ubi_avlInsert()
+ *
+ * @def   ubi_trRemove
+ * @brief Alias for #ubi_avlRemove()
+ *
+ * @def   ubi_trModuleID
+ * @brief Alias for #ubi_avlModuleID()
  */
 
 #undef ubi_trInsert
