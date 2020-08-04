@@ -35,10 +35,11 @@
 # Python detritus
 *.pyc
 *.pyo
+html/
 
 # Remove if we decide to include the scripts (which are already in the 
 # Carnaval repository).
-/scripts
+scripts/
 
 # Personal notes file.
 Notes.txt
