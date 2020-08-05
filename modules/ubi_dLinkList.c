@@ -1,7 +1,7 @@
 /* ========================================================================== **
  *                              ubi_dLinkList.c
  *
- *  Copyright (C) 1997, 1998 by Christopher R. Hertel
+ *  Copyright (C) 1997-1998, 2020 by Christopher R. Hertel
  *
  * -------------------------------------------------------------------------- **
  *  This module implements simple doubly-linked lists.
@@ -23,10 +23,12 @@
  *
  * -------------------------------------------------------------------------- **
  *
- * $Id: ubi_dLinkList.c; 2014-10-20 15:33:43 -0500; Christopher R. Hertel$
+ * $Id: ubi_dLinkList.c; 2020-08-04 20:00:04 -0500; Christopher R. Hertel$
  * https://github.com/ubiqx-org/Modules
  *
- * Logs:
+ * Change logs are now in git.
+ *
+ * Old CVS Logs:
  *
  * Revision 0.11  1999/06/19 16:58:06  crh
  * Renamed the ubi_slRemove() function in ubi_sLinkList to
@@ -86,16 +88,13 @@
  */
 
 ubi_dlListPtr ubi_dlInitList( ubi_dlListPtr ListPtr )
-  /* ------------------------------------------------------------------------ **
-   * Initialize a doubly-linked list header.
+  /** Initialize a doubly-linked list header.
    *
-   *  Input:  ListPtr - A pointer to the list structure that is to be
+   * @param   ListPtr   A pointer to the list structure that is to be
    *                    initialized for use.
    *
-   *  Output: A pointer to the initialized list header (i.e., same as
-   *          <ListPtr>).
-   *
-   * ------------------------------------------------------------------------ **
+   * @returns A pointer to the initialized list header (i.e., same as
+   *          \p ListPtr).
    */
   {
   ListPtr->Head  = NULL;
@@ -107,21 +106,18 @@ ubi_dlListPtr ubi_dlInitList( ubi_dlListPtr ListPtr )
 ubi_dlNodePtr ubi_dlInsert( ubi_dlListPtr ListPtr,
                             ubi_dlNodePtr New,
                             ubi_dlNodePtr After )
-  /* ------------------------------------------------------------------------ **
-   * Insert a new node into the list.
+  /** Insert a new node into the list.
    *
-   *  Input:  ListPtr - A pointer to the list into which the node is to
+   * @param   ListPtr   A pointer to the list into which the node is to
    *                    be inserted.
-   *          New     - Pointer to the new node.
-   *          After   - NULL, or a pointer to a node that is already in the
+   * @param   New       Pointer to the new node.
+   * @param   After     NULL, or a pointer to a node that is already in the
    *                    list.
-   *                    If NULL, then <New> will be added at the head of the
-   *                    list, else it will be added following <After>.
+   *                    If NULL, then \p New will be added at the head of the
+   *                    list, else it will be added following \p After.
    *
-   *  Output: A pointer to the node that was inserted into the list (i.e.,
-   *          the same as <New>).
-   *
-   * ------------------------------------------------------------------------ **
+   * @returns A pointer to the node that was inserted into the list (i.e.,
+   *          the same as \p New).
    */
   {
   ubi_dlNodePtr PredNode = After ? After : (ubi_dlNodePtr)ListPtr;
@@ -140,17 +136,14 @@ ubi_dlNodePtr ubi_dlInsert( ubi_dlListPtr ListPtr,
   } /* ubi_dlInsert */
 
 ubi_dlNodePtr ubi_dlRemove( ubi_dlListPtr ListPtr, ubi_dlNodePtr Old )
-  /* ------------------------------------------------------------------------ **
-   * Remove a node from the list.
+  /** Remove a node from the list.
    *
-   *  Input:  ListPtr - A pointer to the list from which <Old> is to be
+   * @param   ListPtr   A pointer to the list from which \p Old is to be
    *                    removed.
-   *          Old     - A pointer to the node that is to be removed from the
+   * @param   Old       A pointer to the node that is to be removed from the
    *                    list.
    *
-   *  Output: A pointer to the node that was removed (i.e., <Old>).
-   *
-   * ------------------------------------------------------------------------ **
+   * @returns A pointer to the node that was removed (i.e., \p Old).
    */
   {
   if( Old )

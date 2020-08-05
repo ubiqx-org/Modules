@@ -23,10 +23,12 @@
  *
  * -------------------------------------------------------------------------- **
  *
- * $Id: ubi_sLinkList.c; 2014-11-20 22:26:35 -0600; Christopher R. Hertel$
+ * $Id: ubi_sLinkList.c; 2020-08-04 20:00:04 -0500; Christopher R. Hertel$
  * https://github.com/ubiqx-org/Modules
  *
- * Logs:
+ * Change logs are now in git.
+ *
+ * Old CVS Logs:
  *
  * Revision 0.11  2014/11/20 crh
  * Updated some internal comments to remind readers to think very carefully
@@ -70,41 +72,6 @@
  * Revision 0.1  1997/10/16 02:53:45  crh
  * Initial Revision.
  *
- * -------------------------------------------------------------------------- **
- *  This module implements a singly-linked list which may also be used as a
- *  queue or a stack.  For a queue, entries are added at the tail and removed
- *  from the head of the list.  For a stack, the entries are entered and
- *  removed from the head of the list.  A traversal of the list will always
- *  start at the head of the list and proceed toward the tail.  This is all
- *  mind-numbingly simple, but I'm surprised by the number of programs out
- *  there which re-implement this a dozen or so times.
- *
- *  Note:  When the list header is initialized, the Tail pointer is set to
- *         point to the Head pointer.  This simplifies things a great deal,
- *         except that you can't initialize a stack or queue by simply
- *         zeroing it out.  One sure way to initialize the header is to call
- *         ubi_slInit().  Another option would be something like this:
- *
- *           ubi_slNewList( MyList );
- *
- *         Which translates to:
- *
- *           ubi_slList MyList[1] = { NULL, (ubi_slNodePtr)MyList, 0 };
- *
- *         See ubi_slInit(), ubi_slNewList(), and the ubi_slList structure
- *         for more info.
- *
- *        + Also, note that this module is similar to the ubi_dLinkList
- *          module.  There are three key differences:
- *          - This is a singly-linked list, the other is a doubly-linked
- *            list.
- *          - In this module, if the list is empty, the tail pointer will
- *            point back to the head of the list as described above.  This
- *            is not done in ubi_dLinkList.
- *          - The ubi_slRemoveNext() function, by necessity, removes the
- *            'next' node.  In ubi_dLinkList, the ubi_dlRemove() function
- *            removes the 'current' node.
- *
  * ========================================================================== **
  */
 
@@ -115,16 +82,13 @@
  */
 
 ubi_slListPtr ubi_slInitList( ubi_slListPtr ListPtr )
-  /* ------------------------------------------------------------------------ **
-   * Initialize a singly-linked list header.
+  /** Initialize a singly-linked list header.
    *
-   *  Input:  ListPtr - A pointer to the list structure that is to be
+   * @param   ListPtr   A pointer to the list structure that is to be
    *                    initialized for use.
    *
-   *  Output: A pointer to the initialized list header (i.e., same as
-   *          <ListPtr>).
-   *
-   * ------------------------------------------------------------------------ **
+   * @returns A pointer to the initialized list header (i.e., same as
+   *          \p ListPtr).
    */
   {
   ListPtr->Head  = NULL;
@@ -136,20 +100,17 @@ ubi_slListPtr ubi_slInitList( ubi_slListPtr ListPtr )
 ubi_slNodePtr ubi_slInsert( ubi_slListPtr ListPtr,
                             ubi_slNodePtr New,
                             ubi_slNodePtr After )
-  /* ------------------------------------------------------------------------ **
-   * Add a node to the list.
+  /** Add a node to the list.
    *
-   *  Input:  ListPtr - A pointer to the list into which the node is to
+   * @param   ListPtr   A pointer to the list into which the node is to
    *                    be inserted.
-   *          New     - Pointer to the node that is to be added to the list.
-   *          After   - Pointer to a list in a node after which the new node
+   * @param   New       Pointer to the node that is to be added to the list.
+   * @param   After     Pointer to a list in a node after which the new node
    *                    will be inserted.  If NULL, then the new node will
    *                    be added at the head of the list.
    *
-   *  Output: A pointer to the node that was inserted into the list (i.e.,
-   *          the same as <New>).
-   *
-   * ------------------------------------------------------------------------ **
+   * @returns   A pointer to the node that was inserted into the list (i.e.,
+   *            the same as \p New).
    */
   {
   After = After ? After : (ubi_slNodePtr)ListPtr;
@@ -162,20 +123,19 @@ ubi_slNodePtr ubi_slInsert( ubi_slListPtr ListPtr,
   } /* ubi_slInsert */
 
 ubi_slNodePtr ubi_slRemoveNext( ubi_slListPtr ListPtr, ubi_slNodePtr AfterMe )
-  /* ------------------------------------------------------------------------ **
-   * Remove the node followng <AfterMe>.  If <AfterMe> is NULL, remove from
+  /** Remove a node from the list.
+   *
+   * Remove the node followng \p AfterMe.  If \p AfterMe is NULL, remove from
    * the head of the list.
    *
-   *  Input:  ListPtr - A pointer to the list from which the node is to be
+   * @param   ListPtr   A pointer to the list from which the node is to be
    *                    removed.
-   *          AfterMe - Pointer to the node preceeding the node to be
+   * @param   AfterMe   Pointer to the node \e preceeding the node to be
    *                    removed.
    *
-   *  Output: A pointer to the node that was removed, or NULL if no deltion
-   *          occurred.  NULL is returned if the list is already empty, or
-   *          if there is no node following <AfterMe> to be deleted.
-   *
-   * ------------------------------------------------------------------------ **
+   * @returns A pointer to the node that was removed, or NULL.  NULL is
+   *          returned if the list is already empty, or if there is no node
+   *          following \p AfterMe.
    */
   {
   ubi_slNodePtr DelNode;
@@ -183,9 +143,9 @@ ubi_slNodePtr ubi_slRemoveNext( ubi_slListPtr ListPtr, ubi_slNodePtr AfterMe )
   /* This next blurp of code is quirky, but it works.
    * If <AfterMe> is given as NULL, we set it to point to the list header,
    * casting the list header to be a node header.
-   * Think it through.  It is acceptable within C rules, and it works.
    */
-  AfterMe = AfterMe ? AfterMe : (ubi_slNodePtr)ListPtr;
+  if( NULL == AfterMe )
+    AfterMe = (ubi_slNodePtr)ListPtr;
   DelNode = AfterMe->Next;
 
   /* If there is a node to delete, delete it. */
