@@ -1,7 +1,7 @@
 /* ========================================================================== **
  *                             ubi_SparseArray.c
  *
- *  Copyright (C) 1999 by Christopher R. Hertel
+ *  Copyright (C) 1999, 2002, 2020 by Christopher R. Hertel
  *
  * -------------------------------------------------------------------------- **
  *  This module implements a binary tree based sparse array.
@@ -22,30 +22,13 @@
  *  Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
  * -------------------------------------------------------------------------- **
- * This is a simple implementation of a sparse array based on binary trees.
- * The default is to use ubi_SplayTree, but this can be changed by altering
- * the #include in the header file.
  *
- * This implementation adds a pointer to a child tree to the node structures.
- * This allows a child tree to be to be connected at any node in a given
- * binary tree.  In addition, the tree root structure contains pointers to
- * link back to the parent tree and parent node.
- *
- * Note that when we talk about a child tree we are talking about an entire
- * tree, not a subset of the current tree.  This adds a new dimension at
- * *each* node.  For that reason, we sometimes refer to the child trees as
- * vectors or arrays.
- *
- * Using these new pointers (from node to child tree and from child tree root
- * back to parent node and parent tree), it is easy to traverse the sparse
- * array.  Traversal within an array is handled by the binary tree functions.
- *
- * -------------------------------------------------------------------------- **
- *
- * $Id: ubi_SparseArray.c; 2014-10-20 15:33:42 -0500; Christopher R. Hertel$
+ * $Id: ubi_SparseArray.c; 2020-08-09 12:13:36 -0500; crh$
  * https://github.com/ubiqx-org/Modules
  *
- * Logs:
+ * Change logs are now in git.
+ *
+ * Old CVS Logs:
  *
  * Revision 1.1  2010-11-08 19:58:15  crh
  * Fixed a spelling error.
@@ -59,6 +42,7 @@
 
 #include "ubi_SparseArray.h"  /* Header for *this* module. */
 
+
 /* -------------------------------------------------------------------------- **
  * Functions...
  */
@@ -66,23 +50,22 @@
 ubi_arrRootPtr ubi_arrInitRoot( ubi_arrRootPtr RootPtr,
                                 ubi_trCompFunc CompFunc,
                                 char           Flags )
-  /* ------------------------------------------------------------------------ **
-   * Initialize a vector root.
+  /** Initialize a vector root.
    *
-   *  Input:  RootPtr   - Pointer to the ubi_arrRoot to be initialized.
-   *          CompFunc  - Comparison function to be used to sort the entries
-   *                      in this vector.
-   *          Flags     - Available flags are listed in ubi_BinTree.h.
+   * @param   RootPtr   Pointer to the ubi_arrRoot to be initialized.
+   * @param   CompFunc  Comparison function to be used to sort the entries
+   *                    in this vector.
+   * @param   Flags     Available flags are listed in \c ubi_BinTree.h.
    *
-   *  Output: A pointer to the initialized root structure (that is, the same
-   *          as RootPtr).
+   * @returns A pointer to the initialized root structure (that is, the same
+   *          as \p RootPtr).
    *
-   *  Notes:  This is the same as initializing a binary tree root, except
-   *          that there are additional pointers to the parent tree and node.
-   *          These are initialized to NULL.  Use ubi_arrAddSubArray() to
-   *          add this tree to a node in another tree.
+   * \b Notes
+   *  - This is a descendent of the binary tree root initialization.  The
+   *    vector root has additional pointers to the parent tree and node
+   *    that are also initialized.
    *
-   * ------------------------------------------------------------------------ **
+   * @see #ubi_arrAddSubArray()
    */
   {
   (void)ubi_trInitTree( (ubi_trRootPtr)RootPtr, CompFunc, Flags );
@@ -92,14 +75,12 @@ ubi_arrRootPtr ubi_arrInitRoot( ubi_arrRootPtr RootPtr,
   } /* ubi_arrInitRoot */
 
 ubi_arrNodePtr ubi_arrInitNode( ubi_arrNodePtr NodePtr )
-  /* ------------------------------------------------------------------------ **
-   * Initialize a sparse array node structure.
+  /** Initialize a sparse array node structure.
    *
-   *  Input:  NodePtr - Pointer to the ubi_arrNode to be initialized.
+   * @param   NodePtr   Pointer to the ubi_arrNode to be initialized.
    *
-   *  Output: Pointer to the initialized node (that is, the same as NodePtr).
-   *
-   * ------------------------------------------------------------------------ **
+   * @returns A pointer to the initialized node (that is, the same as
+   *          \p NodePtr).
    */
   {
   (void)ubi_trInitNode( (ubi_trNodePtr)NodePtr );
@@ -108,41 +89,33 @@ ubi_arrNodePtr ubi_arrInitNode( ubi_arrNodePtr NodePtr )
   } /* ubi_arrInitNode */
 
 ubi_arrRootPtr ubi_arrDown( ubi_arrNodePtr NodePtr )
-  /* ------------------------------------------------------------------------ **
-   * Returns a pointer to the vector associated with <NodePtr>, or NULL if
-   * there is no associated vector.
+  /** Return the subvector of the current node, if any.
    *
-   *  Input:  NodePtr - pointer to the link node.
+   * @param   NodePtr   pointer to the link node.
    *
-   *  Output: A pointer to the subarray attached at *NodePtr, or NULL if
-   *          *NodePtr does not point to a subarray.
-   *
-   *  Notes:  This operation can be thought of as a move to a new dimension.
-   *          Using an analogy from C, if you are looking at X[6,3,4], this
-   *          function would return a pointer to X[6,3,4,0].  Sort of.
-   *
-   * ------------------------------------------------------------------------ **
+   * @returns A pointer to the subarray attached at \p NodePtr, or NULL if
+   *          \p NodePtr does not point to a subarray.
    */
   {
   return( (ubi_arrRootPtr)(NodePtr->subArray) );
   } /* ubi_arrDown */
 
 ubi_arrRootPtr ubi_arrUp( ubi_arrRootPtr RootPtr, ubi_arrNodePtr *parentp )
-  /* ------------------------------------------------------------------------ **
+  /** Logically move up a level in the given sparse array.
+   *
    * Given a pointer to a vector root, return a pointer to the vector that
    * contains the parent node (if there is one).
    *
-   *  Input:  RootPtr - pointer to a vector root.
-   *          parentp - pointer to a ubi_arrNodePtr.  If NULL, this value
+   * @param   RootPtr   A pointer to a vector root.
+   * @param   parentp   A pointer to a #ubi_arrNodePtr.  If NULL, this value
    *                    will be ignored.  If non-NULL, the indicated pointer
    *                    will be set to point to the node which is the
-   *                    parent of *RootPtr.
+   *                    parent of \p RootPtr.
    *
-   *  Output: A pointer to the root of the parent vector.  If RootPtr points
+   * @returns A pointer to the root of the parent vector.  If RootPtr points
    *          to a top-level vector, then the return value will be NULL (and,
-   *          if parentp != NULL, then *parentp will also be set to NULL).
-   *
-   * ------------------------------------------------------------------------ **
+   *          if <tt>parentp != NULL</tt>, then \p parentp will also be set
+   *          to NULL).
    */
   {
   if( NULL != parentp )
@@ -151,17 +124,14 @@ ubi_arrRootPtr ubi_arrUp( ubi_arrRootPtr RootPtr, ubi_arrNodePtr *parentp )
   } /* ubi_arrUp */
 
 ubi_arrRootPtr ubi_arrTop( ubi_arrRootPtr RootPtr )
-  /* ------------------------------------------------------------------------ **
-   * Return a pointer to the top-most tree in the sparse array.
+  /** Return a pointer to the top-most tree in the sparse array.
    *
-   *  Input:  RootPtr - Pointer to the root of a tree (vector) within the
+   * @param   RootPtr   Pointer to the root of a tree (vector) within the
    *                    sparse array.
    *
-   *  Output: A pointer to the top-most root in the sparse array.  If RootPtr
-   *          is NULL, then the array is the 'empty' array and NULL will be
-   *          returned.
-   *
-   * ------------------------------------------------------------------------ **
+   * @returns A pointer to the top-most root in the sparse array.  If
+   *          \p RootPtr is NULL, then the array is considered to be the
+   *          'empty' array and NULL will be returned.
    */
   {
   if( NULL != RootPtr )
@@ -175,19 +145,18 @@ ubi_arrRootPtr ubi_arrTop( ubi_arrRootPtr RootPtr )
 ubi_arrRootPtr ubi_arrAddSubArray( ubi_arrRootPtr NewRootPtr,
                                    ubi_arrRootPtr ParentRootPtr,
                                    ubi_arrNodePtr ParentNodePtr )
-  /* ------------------------------------------------------------------------ **
-   * Add a vector header (tree root) at a given node.
+  /** Add a vector header (tree root) at a given node.
    *
-   *  Input:  NewRootPtr    - Pointer to the root of the vector (tree) that
+   * @param   NewRootPtr      Pointer to the root of the vector (tree) that
    *                          is to be added as a child array at the node
-   *                          indicated by ParentNodePtr.
-   *          ParentRootPtr - Pointer to the root of the vector (tree) that
-   *                          contains ParentNodePtr.
-   *          ParentNodePtr - The node at which the new vector will be
+   *                          indicated by \p ParentNodePtr.
+   * @param   ParentRootPtr   Pointer to the root of the vector (tree) that
+   *                          contains \p ParentNodePtr.
+   * @param   ParentNodePtr   The node at which the new vector will be
    *                          attached.
    *
-   *  Output: Pointer to the root of the newly added vector (that is, the
-   *          same as NewRootPtr).
+   * @returns Pointer to the root of the newly added vector (that is, the
+   *          same as \p NewRootPtr).
    *
    * ------------------------------------------------------------------------ **
    */
@@ -199,16 +168,13 @@ ubi_arrRootPtr ubi_arrAddSubArray( ubi_arrRootPtr NewRootPtr,
   } /* ubi_arrAddSubArray */
 
 ubi_arrRootPtr ubi_arrRemSubArray( ubi_arrNodePtr NodePtr )
-  /* ------------------------------------------------------------------------ **
-   * Remove a vector from a node.
+  /** Remove a vector from a node.
    *
-   *  Input:  NodePtr - Pointer to the node at which the vector to be removed
+   * @param   NodePtr   Pointer to the node at which the vector to be removed
    *                    is connected.
    *
-   *  Output: Pointer to the root of the vector that was disconnected.  If
-   *          no vector was found, the function will return NULL.
-   *
-   * ------------------------------------------------------------------------ **
+   * @returns A pointer to the root of the vector that was disconnected.
+   *          If no vector was found, the function will return NULL.
    */
   {
   ubi_arrRootPtr tmp = NodePtr->subArray;
