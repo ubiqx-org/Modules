@@ -9,7 +9,7 @@ Simple tools you should never need to write yourself +
 * A Sparse Array and Caching module based on the above.
 
 These are the little training wheels that keep getting re-invented over and
-over again when they should be written once and just re-used.
+over again when they should be written once and re-used forever.
 
 The modules have been around for a while.
 
@@ -19,8 +19,9 @@ The modules have been around for a while.
   the time, that the Amiga should have the same feature.
 
 * The *Linked List* code was added in the mid 1990's to consolidate several
-  different implementations within a single Linux/BSD application.  Linked
-  list implementations are sometimes written and rewritten out of habit.
+  different implementations were all written for one large-scale
+  application.  Linked list implementations are sometimes rewritten out of
+  habit.
 
 * The *Cache* code is a simple application of the Binary Splay Tree, in
   which the Least Recently Used (LRU) nodes _tend_ to move toward the bottom
@@ -30,11 +31,11 @@ The modules have been around for a while.
 * The *Sparse Array* is a nested tree structure, providing a mechanism for
   mapping key-tuples to values.
 
-All of these modules have been tested on Linux, OpenBSD, and FreeBSD.  
-They are fairly self-contained, and should port to other platforms with 
-relative ease.  They are not optimized for any particular environment or 
-application, however.  Obviously, if you need optimized performance then 
-you probably need tailored code.
+All of these modules have been tested on Linux, OpenBSD, FreeBSD, and a few
+other environments.  They are fairly self-contained, and should port to
+other platforms with relative ease.  They are not optimized for any
+particular environment or application, however.  Obviously, if you need
+optimized performance then you probably need tailored code.
 
 Using the _ubiqx_ Modules
 -------------------------
@@ -88,21 +89,21 @@ Again, see the individual files for specific license information.
 
 Coding Style
 ------------
-It's called Whitesmith.  It has been around for quite some time.  There 
-is a valid explanation for just about everything you hate about it, but 
-I won't claim that makes it right (or wrong).  It's just what works best 
+It's called Whitesmith.  It has been around for quite some time.  There
+is a valid explanation for just about everything you hate about it, but
+I won't claim that makes it right (or wrong).  It's just what works best
 for yours truly.  I find it exceedingly easy to read.
 
-In the 
-https://www.kernel.org/doc/html/v4.10/process/coding-style.html[Linux 
-Kernel Coding Style] doc, it says "Coding style is very personal".  The 
-obvious corolary is that any attack on someone's coding style is a 
+In the
+https://www.kernel.org/doc/html/v4.10/process/coding-style.html[Linux
+Kernel Coding Style] doc, it says "Coding style is very personal".  The
+obvious corolary is that any attack on someone's coding style is a
 personal attack.  Just don't.
 
-Where appropriate, the comments are in the process of being reformatted 
-to Doxygen style, so that the copious internal documentation (of which 
-there is an excessivly big bunch) can be made more accessible.
+Where appropriate, the comments in the code have been converted to Doxygen
+format so that the copious internal documentation (of which there is an
+excessivly big bunch) can be made more accessible.
 
 Timestamp
 ---------
-$Id: README.asciidoc; 2020-07-27 19:47:22 -0500; Christopher R. Hertel$
+$Id: README.asciidoc; 2020-08-09 12:26:14 -0500; crh$
