@@ -27,7 +27,7 @@
  *
  * -------------------------------------------------------------------------- **
  *
- * $Id: ubi_BinTree.h; 2020-08-03 14:22:06 -0500; Christopher R. Hertel$
+ * $Id: ubi_BinTree.h; 2020-09-23 19:59:08 -0500; crh$
  * https://github.com/ubiqx-org/Modules
  *
  * Change logs are now in git.
@@ -215,7 +215,7 @@
  * @author  Christopher R. Hertel
  * @brief   Basic Binary Tree implementation.
  * @date    June 1991
- * @version $Id: ubi_BinTree.h; 2020-08-03 14:22:06 -0500; Christopher R. Hertel$
+ * @version \$Id: ubi_BinTree.h; 2020-09-23 19:59:08 -0500; crh$
  * @copyright Copyright (C) 1991-1998, 2014, 2020 by Christopher R. Hertel
  *
  * @details

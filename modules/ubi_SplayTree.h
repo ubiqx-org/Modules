@@ -37,7 +37,7 @@
  *
  * -------------------------------------------------------------------------- **
  *
- * $Id: ubi_SplayTree.h; 2020-08-04 12:52:18 -0500; Christopher R. Hertel$
+ * $Id: ubi_SplayTree.h; 2020-09-23 19:59:09 -0500; crh$
  * https://github.com/ubiqx-org/Modules
  *
  * Change logs are now in git.
@@ -162,7 +162,7 @@
  * @author  Christopher R. Hertel
  * @brief   AVL Height Balanced Tree implementation.
  * @date    April 1994
- * @version $Id: ubi_SplayTree.h; 2020-08-04 12:52:18 -0500; Christopher R. Hertel$
+ * @version \$Id: ubi_SplayTree.h; 2020-09-23 19:59:09 -0500; crh$
  * @copyright Copyright (C) 1993-1998, 2014, 2020 by Christopher R. Hertel
  *
  * @details

@@ -25,7 +25,7 @@
  *
  * -------------------------------------------------------------------------- **
  *
- * $Id: ubi_SparseArray.h; 2020-08-09 12:13:36 -0500; crh$
+ * $Id: ubi_SparseArray.h; 2020-09-23 19:59:09 -0500; crh$
  * https://github.com/ubiqx-org/Modules
  *
  * Change logs are now in git.
@@ -45,7 +45,7 @@
  * @author  Christopher R. Hertel
  * @brief   Sparse Array over Binary Trees.
  * @date    29-Aug-2002
- * @version $Id: ubi_SparseArray.h; 2020-08-09 12:13:36 -0500; crh$
+ * @version \$Id: ubi_SparseArray.h; 2020-09-23 19:59:09 -0500; crh$
  * @copyright Copyright (C) 1999, 2002, 2020 by Christopher R. Hertel
  *
  * @details

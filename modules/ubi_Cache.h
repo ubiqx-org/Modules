@@ -27,7 +27,7 @@
  *
  * -------------------------------------------------------------------------- **
  *
- * $Id: ubi_Cache.h; 2020-08-05 16:43:13 -0500; Christopher R. Hertel$
+ * $Id: ubi_Cache.h; 2020-09-23 19:59:08 -0500; crh$
  * https://github.com/ubiqx-org/Modules
  *
  * Change logs are now in git.
@@ -57,7 +57,7 @@
  * @author    Christopher R. Hertel
  * @brief     Simple caching module based on \c ubi_SplayTree.
  * @date      18 Dec 1997
- * @version   $Id: ubi_Cache.h; 2020-08-05 16:43:13 -0500; Christopher R. Hertel$
+ * @version   \$Id: ubi_Cache.h; 2020-09-23 19:59:08 -0500; crh$
  * @copyright Copyright (C) 1997, 2020 by Christopher R. Hertel
  *
  * @details

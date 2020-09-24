@@ -47,7 +47,7 @@
  *
  * -------------------------------------------------------------------------- **
  *
- * $Id: sys_include.h; 2020-08-03 14:19:41 -0500; Christopher R. Hertel$
+ * $Id: sys_include.h; 2020-09-23 19:59:08 -0500; crh$
  * https://github.com/ubiqx-org/Modules
  *
  * Revision 0.0  1998/06/02 02:20:49  crh
@@ -57,7 +57,7 @@
  *//**
  * @file      sys_include.h
  * @author    Christopher R. Hertel
- * @version   $Id: sys_include.h; 2020-08-03 14:19:41 -0500; Christopher R. Hertel$
+ * @version   \$Id: sys_include.h; 2020-09-23 19:59:08 -0500; crh$
  * @copyright Copyright (C) 1998, 2020 by Christopher R. Hertel
  *
  * @brief     Ensure a correct definition of NULL.

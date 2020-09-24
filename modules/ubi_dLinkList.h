@@ -25,7 +25,7 @@
  *
  * -------------------------------------------------------------------------- **
  *
- * $Id: ubi_dLinkList.h; 2020-08-04 20:00:04 -0500; Christopher R. Hertel$
+ * $Id: ubi_dLinkList.h; 2020-09-23 19:59:09 -0500; crh$
  * https://github.com/ubiqx-org/Modules
  *
  * Change logs are now in git.
@@ -78,7 +78,7 @@
  * @author  Christopher R. Hertel
  * @brief   Doubly linked list implementation.
  * @date    Octoberly 1997
- * @version $Id: ubi_dLinkList.h; 2020-08-04 20:00:04 -0500; Christopher R. Hertel$
+ * @version \$Id: ubi_dLinkList.h; 2020-09-23 19:59:09 -0500; crh$
  * @copyright Copyright (C) 1997-1998, 2020 by Christopher R. Hertel
  *
  * @details
