@@ -6,7 +6,7 @@ Simple tools you should never need to write yourself +
 
 * Linked Lists (Single and Double)
 * Binary Trees (Simple, AVL, and Splay)
-* A Sparse Array and Caching module based on the above.
+* A Sparse Array and a Caching module, based on the above.
 
 These are the little training wheels that keep getting re-invented over and
 over again when they should be written once and re-used forever.
@@ -19,9 +19,9 @@ The modules have been around for a while.
   the time, that the Amiga should have the same feature.
 
 * The *Linked List* code was added in the mid 1990's to consolidate several
-  different implementations were all written for one large-scale
+  different implementations that were all written for one large-scale
   application.  Linked list implementations are sometimes rewritten out of
-  habit.
+  habit rather than purpose.
 
 * The *Cache* code is a simple application of the Binary Splay Tree, in
   which the Least Recently Used (LRU) nodes _tend_ to move toward the bottom
@@ -34,8 +34,16 @@ The modules have been around for a while.
 All of these modules have been tested on Linux, OpenBSD, FreeBSD, and a few
 other environments.  They are fairly self-contained, and should port to
 other platforms with relative ease.  They are not optimized for any
-particular environment or application, however.  Obviously, if you need
-optimized performance then you probably need tailored code.
+particular environment or application, however.  If you need optimized
+performance then you probably need tailored code, but at least you have a
+reference implementation from which to crib.
+
+Documentation
+-------------
+
+This pile of code has always been well commented, and those comments have
+now been converted to https://www.doxygen.nl/index.html[Doxygen] format.
+A suitable `Doxyfile` configuration file is included.
 
 Using the _ubiqx_ Modules
 -------------------------
@@ -45,11 +53,12 @@ files contain macros that hide much of the gory details.  It is possible, for
 example to switch between binary tree types simply by changing which header
 is included.  There are example programs in the repository.
 
-These modules rely on a simple quirk of the C language.  The specification
-states that the address of a structure is the same as the address of its first
+These modules rely on a simple quirk of the C language.  C _does not_
+guarantee the layout of a structure in memory, but the specification does
+state that the address of a structure is the same as the address of its first
 member (see [ANSI-C, pg.174]).  As a result, if you include the node structure
-as the first item in your own data structure, you can simply pass that
-structure into the module functions.
+as the first item in your own data structure, you can simply pass a pointer to
+an instance of that structure into the module functions.
 
 Compiling
 ~~~~~~~~~
@@ -59,7 +68,7 @@ A brief guide to some of the more useful make targets:
 * *`make`* - Builds all of the test tools and the modules library.
 * *`make lib`* - Builds the `libubiqx.a` modules library.
 * *`make clean`* - Deletes compiled files.
-* *`make rebuild`* - Deletes compiled files and rebuild everything.
+* *`make rebuild`* - Deletes compiled files and rebuilds everything.
 
 References
 ----------
@@ -101,8 +110,8 @@ obvious corolary is that any attack on someone's coding style is a
 personal attack.  Just don't.
 
 Where appropriate, the comments in the code have been converted to Doxygen
-format so that the copious internal documentation (of which there is an
-excessivly big bunch) can be made more accessible.
+format so that the copious internal notes (of which there is an excessivly
+big bunch) can be made more accessible.
 
 Timestamp
 ---------
