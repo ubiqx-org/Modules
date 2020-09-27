@@ -11,7 +11,7 @@
 A long, long time ago<br/>
 I can still remember how<br/>
 My simple code would make me smile<br/>
-But I knew that if I had my chance<br/>
+And I knew that if I had my chance<br/>
 That I could make these modules dance<br/>
 And maybe they'd be happy to compile<br/>
 </i>
@@ -94,15 +94,15 @@ References
 <dl>
   <dt>[ANSI-C]</dt>
   <dd>
-    Kernighan, Brian W.; Ritchie, Dennis M. (March 1988).  __The C
-    Programming Language (2nd ed.).__  Englewood Cliffs, NJ: Prentice Hall.
-    ISBN 0-13-110362-8.
+  Kernighan, Brian W.; Ritchie, Dennis M. (March 1988).  __The C
+  Programming Language (2nd ed.).__  Englewood Cliffs, NJ: Prentice Hall.
+  ISBN 0-13-110362-8.
   </dd>
   <dt>Wikipedia:</dt>
   <dd>
-    - [AVL Tree](http://en.wikipedia.org/wiki/AVL_tree)
-    - [Binary Tree](http://en.wikipedia.org/wiki/Binary_tree)
-    - [Splay Tree](http://en.wikipedia.org/wiki/Splay_tree)
+  - [AVL Tree](http://en.wikipedia.org/wiki/AVL_tree)
+  - [Binary Tree](http://en.wikipedia.org/wiki/Binary_tree)
+  - [Splay Tree](http://en.wikipedia.org/wiki/Splay_tree)
   </dd>
 </dl>
 
@@ -127,5 +127,5 @@ it says "Coding style is very personal".  The obvious corolary is that any
 attack on someone's coding style is a personal attack.  Just don't.
 
 ----
-\$Id$
+\$Id: ubiqx.dox; 2020-09-27 14:08:20 -0500; crh$
 */

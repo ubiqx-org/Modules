@@ -1,3 +1,4 @@
 *.c kwsub=true
 *.h kwsub=true
+*.dox kwsub=true
 README.asciidoc kwsub=true
