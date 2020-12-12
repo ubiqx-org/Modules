@@ -3,7 +3,7 @@
  * -------------------------------------------------------------------------- **
  * License: Public Domain
  * Description: ubiqx binary tree implementation test program.
- * $Id: tree-sample.c; 2014-10-24 16:28:00 -0500; Christopher R. Hertel$
+ * $Id: tree-sample.c; 2020-12-12 09:59:49 -0600; crh$
  * -------------------------------------------------------------------------- **
  * Notes:
  *  This is an example program that shows how the ubiqx binary tree modules
@@ -42,6 +42,7 @@
  */
 
 #define NAMESIZE 240
+#define bSIZE   1024
 
 
 /* -------------------------------------------------------------------------- **
@@ -86,6 +87,62 @@ static ubi_trRootPtr RootPtr = &Root;
 /* -------------------------------------------------------------------------- **
  * Functions...
  */
+
+static size_t promptFor( const char *const p, char *const s, size_t sLen )
+  /* ------------------------------------------------------------------------ **
+   * Prompt for and read a string from <stdin>.
+   *
+   *  Input:  p     - Pointer to the prompt string.  This will be written to
+   *                  <stdout>.
+   *          s     - A pointer to a buffer into which the user input will
+   *                  be read.  The input is terminated by an EOF, a newline,
+   *                  or if the input string exceeds (<sLen> - 1) octets.
+   *          sLen  - The size, in bytes, of <s>.  At most, (<sLen> - 1)
+   *                  octets will be read from <stdin>.  This function
+   *                  always reserves at least one octet of <s> for a
+   *                  terminating NUL.
+   *
+   *  Output: The number of bytes read, which may be zero (0).  A return
+   *          value of zero indicates the end of input.
+   *
+   *  Notes:
+   *    - The carriage return character ('\r') is purposefully ignored.  It
+   *      is skipped on input and not counted toward the total length of the
+   *      string.  It is voidspace.  It evaporates into nothingness.
+   *    - If the input includes a newline ('\n'), the newline terminates the
+   *      string and is replaced with a NUL.  This differs from the behavior
+   *      of fgets(3).
+   *
+   * ------------------------------------------------------------------------ **
+   */
+  {
+  size_t  st  = 0;
+  int     c;
+
+  /* Reserve one octet for the terminating NUL. */
+  if( 0 == sLen )
+    return( 0 );
+  sLen--;
+
+  /* Read octets. */
+  while( st < sLen )
+    {
+    switch( c = fgetc( stdin ) )
+      {
+      case '\r':
+        break;
+      case '\n':
+      case EOF:
+        s[st] = '\0';
+        return( st );
+      default:
+        s[st++] = c;
+        break;
+      }
+    }
+  s[st] = '\0';
+  return( st );
+  } /* promptFor */
 
 static int CompareFunc( ubi_trItemPtr ItemPtr, ubi_trNodePtr NodePtr )
   /* ------------------------------------------------------------------------ **
@@ -171,7 +228,7 @@ int main( int argc, char *argv[] )
    * ------------------------------------------------------------------------ **
    */
   {
-  char          s[2048];
+  char          s[bSIZE];
   SampleRecPtr  RecPtr;
   int           i;
   char         *ModInfo[2];
@@ -184,8 +241,7 @@ int main( int argc, char *argv[] )
                         0 );          /* Don't allow overwrites or duplicates.*/
                                       /* See the Insert() notes in BinTree.h. */
 
-  (void)printf( "Input string (blank line to exit)> " );
-  while( gets( s ) && strlen(s) )
+  while( promptFor( "Input string (blank line to exit)> ", s, bSIZE ) )
     {
     /* Allocate a new node to be added to the tree. */
     RecPtr = (SampleRecPtr)malloc( sizeof(SampleRec) );
@@ -209,7 +265,6 @@ int main( int argc, char *argv[] )
       (void)fprintf( stderr, "Error: Duplicate key.  Record not added.\n" );
       KillNode( (ubi_trNodePtr)RecPtr );
       }
-    (void)printf( "Input string (blank line to exit)> " );
     }
 
   /* Now that the tree is full, dump it in sorted order. */
