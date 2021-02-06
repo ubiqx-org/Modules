@@ -106,7 +106,7 @@ for yours truly.  I find it exceedingly easy to read.
 In the
 https://www.kernel.org/doc/html/v4.10/process/coding-style.html[Linux
 Kernel Coding Style] doc, it says "Coding style is very personal".  The
-obvious corolary is that any attack on someone's coding style is a
+obvious corollary is that any attack on someone's coding style is a
 personal attack.  Just don't.
 
 Where appropriate, the comments in the code have been converted to Doxygen
