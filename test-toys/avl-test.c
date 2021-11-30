@@ -3,7 +3,7 @@
  * -------------------------------------------------------------------------- **
  * License: Public Domain
  * Description: ubiqx AVL tree implementation test program.
- * $Id: avl-test.c; 2014-10-23 16:40:12 -0500; Christopher R. Hertel$
+ * $Id: avl-test.c; 2021-11-29 22:28:07 -0600; crh$
  * -------------------------------------------------------------------------- **
  * Notes:
  *  This is a simple test program used to verify the workings of the AVL tree
@@ -11,7 +11,11 @@
  *
  *  To compile (from within the test-toys directory):
  *    cc -I ../modules -o avl-test \
- *       avl-test.c ../modules/ubi_AVLtree.c ../modules/ubi_BinTree.c
+ *      avl-test.c ../modules/ubi_AVLtree.c ../modules/ubi_BinTree.c
+ *
+ *  Simple examples:
+ *      ls | ./avl-test
+ *      for ((i=1;i<=20000;i++)); do echo $RANDOM; done | ./avl-test | less
  *
  * ========================================================================== **
  */
@@ -27,28 +31,30 @@
 /* -------------------------------------------------------------------------- **
  * Constants...
  *
- * This is a simple test program, so we're using fixed-length strings as our
- * data.  This constant sets the string length (the maximum length includes
- * the terminating NUL byte).
+ * This is a simple test program, so we can get away with using fixed-length
+ * strings to store our data.  This constant sets the string length (the
+ * maximum length includes the terminating NUL byte).
  */
 
-#define NAMESIZE 16
+#define NAMESIZE 256
 
 
 /* -------------------------------------------------------------------------- **
  * Typedefs...
  *
- *  Note: ulong is an unsigned long; oolong is tea.
+ *  ulong         - Shorthand for unsigned long.
+ *                  Note: ulong is an unsigned long; oolong is tea.
  *
- *  SampleRec    - This is the sample data record with which we will be
- *                 playing.  It starts with a ubi_trNode structure (so that
- *                 the tree functions can fiddle with it), the rest is data.
- *                 In this case, we're just using a fixed-length character
- *                 array.  In a "real" program, you could have all sorts
- *                 of stuff.  The <Name> field is both the data and the key.
- *
- *  SampleRecPtr - A pointer to a SampleRec.
+ *  SampleRec     - This is the sample data record with which we will be
+ *                  playing.  It starts with a ubi_trNode structure (so that
+ *                  the tree functions can fiddle with it), the rest is data.
+ *                  In this case, we're just using a fixed-length character
+ *                  array.  In a "real" program, you could have all sorts
+ *                  of stuff.  The <Name> field is both the data and the key.
+ *  SampleRecPtr  - A pointer to a SampleRec.
  */
+
+typedef unsigned long ulong;
 
 typedef struct {
   ubi_trNode Node;
@@ -129,6 +135,7 @@ static int CompareFunc( ubi_trItemPtr ItemPtr, ubi_trNodePtr NodePtr )
   return( strcmp( A, B ) );           /* Now compare and return the result. */
   } /* CompareFunc */
 
+
 static char *gName( char gender )
   /* ------------------------------------------------------------------------ **
    * This function returns a string representing the gender of the node.
@@ -157,6 +164,7 @@ static char *gName( char gender )
   return( "<error>" );
   } /* gName */
 
+
 static char *bName( char balance )
   /* ------------------------------------------------------------------------ **
    * In an AVL tree, each node has a balance factor which should be -1, 0, or
@@ -175,6 +183,7 @@ static char *bName( char balance )
   return( "<error>" );
   } /* bName */
 
+
 static void PrintNode( ubi_trNodePtr NodePtr, void *Userdata )
   /* ------------------------------------------------------------------------ **
    * Print out the contents of a record stored in the tree.
@@ -182,12 +191,13 @@ static void PrintNode( ubi_trNodePtr NodePtr, void *Userdata )
    * ------------------------------------------------------------------------ **
    */
   {
-  SampleRecPtr  RecPtr = (SampleRecPtr)NodePtr;
-  ubi_trNodePtr avlptr = (ubi_trNodePtr)NodePtr; /**/
+  SampleRecPtr  RecPtr = (SampleRecPtr)NodePtr;   /* Cast to local type.  */
+  ubi_trNodePtr avlptr = (ubi_trNodePtr)NodePtr;  /* Cast to AVL node.    */
 
   (void)printf( "[ %s,    %s   ] %s\n", gName( avlptr->gender ),
                 bName( avlptr->balance ), RecPtr->Name );
   } /* PrintNode */
+
 
 static void KillNode( ubi_trNodePtr NodePtr )
   /* ------------------------------------------------------------------------ **
@@ -203,8 +213,10 @@ static void KillNode( ubi_trNodePtr NodePtr )
    * ------------------------------------------------------------------------ **
    */
   {
-  free( (void *)NodePtr );
+  if( NULL != NodePtr )
+    free( (void *)NodePtr );
   } /* KillNode */
+
 
 void Prune( ubi_trRootPtr RootPtr )
   /* ------------------------------------------------------------------------ **
@@ -213,36 +225,63 @@ void Prune( ubi_trRootPtr RootPtr )
    *  Input:  RootPtr - Pointer to the tree header.
    *
    *  Notes:  This function does a sort-of-arbitrary pruning of the tree.
-   *          All nodes in which the second byte of the key is ascii 'u'
-   *          are removed.
+   *          It deletes nodes based on the Fibonacci sequence (skipping the
+   *          first 1): 1, 2, 3, 5, 8, 13, 21, ...
+   *          It then deletes the final node in the tree.  That should cover
+   *          all of the critical corner cases.
    *
    * ------------------------------------------------------------------------ **
    */
   {
-  ubi_trNodePtr This;
+  ulong i,
+        fib0 = 1,
+        fib1 = 1;
+  ubi_trNodePtr This, Next = NULL;
 
-  fputs( "Deleting entries in which the second character is 'u',", stdout );
-  fputs( " for no apparent reason.\n", stdout );
+  (void)puts( "Delete test...guided by the Fibonacci sequence." );
 
-  for( This = ubi_trFirst( RootPtr->root );
-       (NULL != This);
-       This = ubi_trNext( This ) )
+  /* We could use the ubi_trTraverse() function here, but it would require
+   * a bit of fiddling to get the <UserData> set up correctly.  This code
+   * is more obvious.
+   */
+  for( i = 1, This = ubi_trFirst( RootPtr->root ); (NULL != This); i++ )
     {
-    if( 'u' == ((SampleRecPtr)This)->Name[1] )
+    Next = ubi_trNext( This );
+    if( i == fib1 )
       {
-      printf( "x %s x\n", ((SampleRecPtr)This)->Name );
+      (void)printf( "del[%ld]: %s\n", i, ((SampleRecPtr)This)->Name );
       KillNode( ubi_trRemove( RootPtr, This ) );
+      fib1 += fib0;
+      fib0  = i;
       }
+    This = Next;
     }
-  fflush( stdout );
+
+  /* Delete the tail node as well. */
+  This = ubi_btLast( RootPtr->root );
+  if( NULL != This )
+    {
+    (void)printf( "del[<last>]: %s\n", ((SampleRecPtr)This)->Name );
+    KillNode( ubi_trRemove( RootPtr, This ) );
+    }
+  (void)printf( "Node count: %ld.\n", ubi_trCount( RootPtr ) );
   } /* Prune */
+
 
 int Validate( ubi_trNodePtr NodePtr )
   /* ------------------------------------------------------------------------ **
-   * This function performs a recursive traversal of the tree, checking the
-   * balance of each node to ensure that it is correct.  An error message is
-   * displayed if an incorrect balance value is found.  The total height of
-   * the tree is returned.
+   * Recursively validate the tree.
+   *
+   *  Input:  NodePtr - Pointer to the root of the tree (or subtree) to be
+   *                    validated.
+   *
+   *  Output: The height of the given tree (not the node count).
+   *
+   *  Notes:  This function performs a recursive traversal of the AVL tree,
+   *          checking the balance of each node to ensure that it is correct.
+   *          An error message is displayed if an incorrect balance value is
+   *          found.
+   *
    * ------------------------------------------------------------------------ **
    */
   {
@@ -261,15 +300,17 @@ int Validate( ubi_trNodePtr NodePtr )
   return( 1 + (left > right ? left : right) );
   } /* Validate */
 
+
 int main( int argc, char *argv[] )
   /* ------------------------------------------------------------------------ **
    * Program main line.
    * ------------------------------------------------------------------------ **
    */
   {
-  char          s[1024];
+  char          s[NAMESIZE];
   SampleRecPtr  RecPtr;
   unsigned int  i;
+  size_t        sLen;
   char         *ModInfo[2];
 
   /* Print module info. */
@@ -283,8 +324,12 @@ int main( int argc, char *argv[] )
                                       /* See the Insert() notes in BinTree.h. */
 
   /* Load the tree from stdin. */
-  while( gets( s ) && strlen(s) )
+  (void)puts( "Reading sortable data from <stdin>." );
+  while( fgets( s, NAMESIZE, stdin ) && ((sLen = strlen(s)) > 0) )
     {
+    /* Remove the trailing newline, if it exists. */
+    if( '\n' == s[ sLen - 1 ] )
+      s[ sLen - 1 ] = '\0';
     /* Allocate a new node to be added to the tree. */
     RecPtr = (SampleRecPtr)malloc( sizeof(SampleRec) );
     if( !RecPtr )
@@ -294,11 +339,10 @@ int main( int argc, char *argv[] )
       }
 
     /* Copy the new data into the record. */
-    s[NAMESIZE-1] = '\0';             /* Make sure the string is short enough.*/
     (void)strcpy( RecPtr->Name, s );  /* Copy the string into our new record. */
 
     /* Add the record to the tree. */
-    if( !ubi_trInsert( RootPtr,       /* To which tree are we adding this?    */
+    if( !ubi_trInsert( RootPtr,       /* The tree to which we adding this.    */
                        RecPtr,        /* The new node to be added.            */
                        RecPtr->Name,  /* Points to the comparison field.      */
                        NULL )         /* Overwrites are not allowed.          */
@@ -310,17 +354,26 @@ int main( int argc, char *argv[] )
       KillNode( (ubi_trNodePtr)RecPtr );
       }
     }
+  (void)printf( "Node count: %ld.\n", ubi_trCount( RootPtr ) );
 
   /* Delete entries just to see that deleting entries works. */
-  Prune( RootPtr );
+  if( ubi_trCount( RootPtr ) > 0 )
+    Prune( RootPtr );
+  /* Do we have any tree left?  */
+  if( ubi_trCount( RootPtr ) <= 0 )
+    {
+    (void)puts( "The tree is empty." );
+    return( EXIT_SUCCESS );
+    }
 
-  /* Now validate the tree. */
-  printf( "\nValidating the structure of the AVL tree.\n" );
-  printf( "\nTree height is %d\n", Validate( (ubi_trNodePtr)(RootPtr->root) ) );
+  /* Validate the tree. */
+  (void)puts(   "\nValidating the structure of the AVL tree." );
+  (void)printf( "\nTree height is %d\n",
+                Validate( (ubi_trNodePtr)(RootPtr->root) ) );
 
   /* Now dump the remaining entries, providing balance and gender info. */
-  puts( "[gender, balance] content" );
-  puts( " ------  -------  -------" );
+  (void)puts( "[gender, balance] content" );
+  (void)puts( " ------  -------  -------" );
   (void)ubi_trTraverse( RootPtr, PrintNode, NULL );
 
   /* Now free all nodes in the tree. */
