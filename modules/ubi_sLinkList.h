@@ -25,7 +25,7 @@
  *
  * -------------------------------------------------------------------------- **
  *
- * $Id: ubi_sLinkList.h; 2020-09-23 19:59:09 -0500; crh$
+ * $Id: ubi_sLinkList.h; 2024-12-09 21:48:17 -0600; crh$
  * https://github.com/ubiqx-org/Modules
  *
  * Change logs are now in git.
@@ -78,7 +78,7 @@
  * @author  Christopher R. Hertel
  * @brief   Singly linked lists.
  * @date    October 1997
- * @version \$Id: ubi_sLinkList.h; 2020-09-23 19:59:09 -0500; crh$
+ * @version \$Id: ubi_sLinkList.h; 2024-12-09 21:48:17 -0600; crh$
  * @copyright Copyright (C) 1997, 1998, 2014, 2020 by Christopher R. Hertel
  *
  * @details
@@ -115,32 +115,48 @@
  */
 
 /**
+ * @struct  ubi_slListNode
+ * @brief   Basic singly-linked node structure.
+ * @details
+    Defined as follows:
+ *  \code{.c}
+ *  typedef struct ubi_slListNode
+ *    {
+ *    struct ubi_slListNode *Next;
+ *    } ubi_slNode;
+ *  \endcode
+ *  The `ubi_slListNode` name is given only as a forward reference.  Use the
+ *  typedef'd name, \c #ubi_slNode, instead.
+ * @var ubi_slListNode::Next
+ *      Pointer to the next node in the singly linked list.
+ *
  * @struct  ubi_slNode
- * @brief   The basic node structure.
- * @var     ubi_slNode::Next
- *          Pointer to the next node in the list.
+ * @brief   This is the short (typedef'd) name for a `struct ubi_slListNode`.
  */
 typedef struct ubi_slListNode
   {
   struct ubi_slListNode *Next;
   } ubi_slNode;
 
-/** Pointer to a #ubi_slNode. */
+/**
+ * @struct  ubi_slNodePtr
+ * @brief   Pointer to a \c #ubi_slNode.
+ */
 typedef ubi_slNode *ubi_slNodePtr;
 
 /**
  * @struct  ubi_slList
  * @brief   List Header structure.
- * @var   ubi_slList::Head
- *        Pointer to the first node in the linked list.
- *        This will be NULL if the list is empty.
- * @var   ubi_slList::Tail
- *        Pointer to the last node in the linked list.
- *        In an empty list, this will point to back to the list header.
- *        This trick (which I learned from AmigaOS) simplifies several
- *        aspects of list handling.
- * @var   ubi_slList::count
- *        A count of the number of nodes currently in the list.
+ * @var     ubi_slList::Head
+ *          Pointer to the first node in the linked list.
+ *          This will be NULL if the list is empty.
+ * @var     ubi_slList::Tail
+ *          Pointer to the last node in the linked list.
+ *          In an empty list, this will point to back to the list header.
+ *          This trick (which I learned from AmigaOS) simplifies several
+ *          aspects of list handling.
+ * @var     ubi_slList::count
+ *          A count of the number of nodes currently in the list.
  */
 typedef struct
   {
@@ -149,7 +165,10 @@ typedef struct
   unsigned long count;
   } ubi_slList;
 
-/** Pointer to a #ubi_slList. */
+/**
+ * @struct  ubi_slListPtr
+ * @brief   Pointer to a #ubi_slList.
+ */
 typedef ubi_slList *ubi_slListPtr;
 
 
