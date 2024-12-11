@@ -23,7 +23,7 @@
  *
  * -------------------------------------------------------------------------- **
  *
- * $Id: ubi_SparseArray.c; 2020-08-09 12:13:36 -0500; crh$
+ * $Id: ubi_SparseArray.c; 2024-12-11 08:53:18 -0600; crh$
  * https://github.com/ubiqx-org/Modules
  *
  * Change logs are now in git.
@@ -157,8 +157,6 @@ ubi_arrRootPtr ubi_arrAddSubArray( ubi_arrRootPtr NewRootPtr,
    *
    * @returns Pointer to the root of the newly added vector (that is, the
    *          same as \p NewRootPtr).
-   *
-   * ------------------------------------------------------------------------ **
    */
   {
   ParentNodePtr->subArray = NewRootPtr;

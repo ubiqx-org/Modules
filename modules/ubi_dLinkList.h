@@ -25,7 +25,7 @@
  *
  * -------------------------------------------------------------------------- **
  *
- * $Id: ubi_dLinkList.h; 2024-12-09 21:48:17 -0600; crh$
+ * $Id: ubi_dLinkList.h; 2024-12-11 08:53:18 -0600; crh$
  * https://github.com/ubiqx-org/Modules
  *
  * Change logs are now in git.
@@ -78,7 +78,7 @@
  * @author  Christopher R. Hertel
  * @brief   Doubly linked list implementation.
  * @date    Octoberly 1997
- * @version \$Id: ubi_dLinkList.h; 2024-12-09 21:48:17 -0600; crh$
+ * @version \$Id: ubi_dLinkList.h; 2024-12-11 08:53:18 -0600; crh$
  * @copyright Copyright (C) 1997-1998, 2020 by Christopher R. Hertel
  *
  * @details
@@ -103,25 +103,28 @@
 /**
  * @struct  ubi_dlListNode
  * @brief   Doubly linked list node structure.
- * @details The `ubi_dlListNode` name is given only as a forward reference.
- *          Use the typedef'd name, \c #ubi_dlNode, instead.
+ * @note    The `%ubi_dlListNode` name is used only as a forward reference.
+ *          `%ubi_dlNode` is a typedef for `struct %ubi_dlListNode`.
  * @var     ubi_dlListNode::Next
  *          Pointer to the next node in the linked list.
  * @var     ubi_dlListNode::Prev
  *          Pointer to the previous node in the linked list.
- *
- * @struct  ubi_dlNode
- * @brief   This is the short (typedef'd) name for a `struct ubi_dlListNode`.
  */
-typedef struct ubi_dlListNode
+struct ubi_dlListNode
   {
   struct ubi_dlListNode *Next;
   struct ubi_dlListNode *Prev;
-  } ubi_dlNode;
+  };
 
 /**
- * @struct  ubi_dlNodePtr
- * @brief   Pointer to a \c #ubi_dlNode.
+ * @typedef ubi_dlNode
+ * @brief   This is the short (typedef'd) name for a `struct ubi_dlListNode`.
+ */
+typedef struct ubi_dlListNode ubi_dlNode;
+
+/**
+ * @typedef ubi_dlNodePtr
+ * @brief   Pointer to a `ubi_dlNode`.
  */
 typedef ubi_dlNode *ubi_dlNodePtr;
 
@@ -143,7 +146,7 @@ typedef struct
   } ubi_dlList;
 
 /**
- * @struct  ubi_dlListPtr
+ * @typedef ubi_dlListPtr
  * @brief   Pointer to a List (i.e., a \c #ubi_dlList structure).
  */
 typedef ubi_dlList *ubi_dlListPtr;

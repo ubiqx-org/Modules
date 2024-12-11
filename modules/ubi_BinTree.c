@@ -25,7 +25,7 @@
  *
  * -------------------------------------------------------------------------- **
  *
- * $Id: ubi_BinTree.c; 2020-08-03 14:22:06 -0500; Christopher R. Hertel$
+ * $Id: ubi_BinTree.c; 2024-12-11 08:53:18 -0600; crh$
  * https://github.com/ubiqx-org/Modules
  *
  * Change logs are now in git.
@@ -218,7 +218,7 @@
  */
 
 static char ModuleID[] =
-  "$Id: ubi_BinTree.c; 2020-08-03 14:22:06 -0500; Christopher R. Hertel$\n";
+  "$Id: ubi_BinTree.c; 2024-12-11 08:53:18 -0600; crh$\n";
 
 /* ========================================================================== **
  * Internal (private) functions.
@@ -538,10 +538,9 @@ long ubi_btSgn( register long x )
 ubi_btNodePtr ubi_btInitNode( ubi_btNodePtr NodePtr )
   /** Initialize a tree node.
    *
-   * @param   NodePtr   Pointer to a \c #ubi_btNode structure to be
-   *                    initialized.
+   * @param   NodePtr   Pointer to a `ubi_btNode` structure to be initialized.
    *
-   * @returns   A pointer to the initialized \c #ubi_btNode structure (ie.
+   * @returns   A pointer to the initialized `ubi_btNode` structure (ie.
    *            the same as the input pointer).
    */
   {
@@ -593,7 +592,7 @@ ubi_trBool ubi_btInsert( ubi_btRootPtr  RootPtr,
    * @param   RootPtr   A pointer to the \c #ubi_btRoot structure that
    *                    indicates the root of the tree to which NewNode is to
    *                    be added.
-   * @param   NewNode   A pointer to a \c #ubi_btNode structure that is NOT
+   * @param   NewNode   A pointer to a `ubi_btNode` structure that is NOT
    *                    part of any tree.
    * @param   ItemPtr   A pointer to the sort key that is stored within
    *                    \p NewNode.  \p ItemPtr MUST point to information

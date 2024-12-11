@@ -30,7 +30,7 @@
  *
  * -------------------------------------------------------------------------- **
  *
- * $Id: ubi_AVLtree.c; 2020-08-04 12:12:39 -0500; Christopher R. Hertel$
+ * $Id: ubi_AVLtree.c; 2024-12-11 08:53:18 -0600; crh$
  * https://github.com/ubiqx-org/Modules
  *
  * Change logs are now in git.
@@ -165,7 +165,7 @@
  */
 
 static char ModuleID[] =
-  "$Id: ubi_AVLtree.c; 2020-08-04 12:12:39 -0500; Christopher R. Hertel$\n";
+  "$Id: ubi_AVLtree.c; 2024-12-11 08:53:18 -0600; crh$\n";
 
 /* ========================================================================== **
  * The next set of functions are the AVL balancing routines.  There are left
@@ -478,7 +478,7 @@ ubi_trBool ubi_avlInsert( ubi_btRootPtr  RootPtr,
    * @param   RootPtr   A pointer to the #ubi_btRoot structure that indicates
    *                    the root of the tree to which \p NewNode is to be
    *                    added.
-   * @param   NewNode   A pointer to a #ubi_btNode structure that is \b not
+   * @param   NewNode   A pointer to a `ubi_btNode` structure that is \b not
    *                    yet part of any tree.
    * @param   ItemPtr   A pointer to the sort key that is stored within
    *                    \p NewNode.  \p ItemPtr MUST point to the key stored

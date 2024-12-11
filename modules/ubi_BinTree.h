@@ -27,7 +27,7 @@
  *
  * -------------------------------------------------------------------------- **
  *
- * $Id: ubi_BinTree.h; 2020-09-23 19:59:08 -0500; crh$
+ * $Id: ubi_BinTree.h; 2024-12-11 08:53:18 -0600; crh$
  * https://github.com/ubiqx-org/Modules
  *
  * Change logs are now in git.
@@ -215,7 +215,7 @@
  * @author  Christopher R. Hertel
  * @brief   Basic Binary Tree implementation.
  * @date    June 1991
- * @version \$Id: ubi_BinTree.h; 2020-09-23 19:59:08 -0500; crh$
+ * @version \$Id: ubi_BinTree.h; 2024-12-11 08:53:18 -0600; crh$
  * @copyright Copyright (C) 1991-1998, 2014, 2020 by Christopher R. Hertel
  *
  * @details
@@ -477,7 +477,7 @@ typedef void *ubi_btItemPtr;          /* A pointer to key data within a node. */
  */
 
 /**
- * @struct  ubi_btNode
+ * @struct  ubi_btNodeStruct
  * @brief   Binary Tree Node structure.
  * @details There are three pointers, used to link the node to its Left and
  *          Right children (if any) and to its Parent node.  Only the root
@@ -487,29 +487,39 @@ typedef void *ubi_btItemPtr;          /* A pointer to key data within a node. */
  *
  *          In addition, the node structure keeps track of the "gender" and
  *          (for AVL trees) "balance" of the node.
+ * @note    The `%ubi_btNodeStruct` name is used only as a forward reference.
+ *          `%ubi_btNode` is a typedef for `struct %ubi_btNodeStruct`.
  *
- * @var ubi_btNode::Link[]
+ * @var ubi_btNodeStruct::Link[]
  *      A set of three pointers to, respectively, the left child, parent,
  *      and right child nodes.
- * @var ubi_btNode::gender
+ * @var ubi_btNodeStruct::gender
  *      A one-byte field indicating whether the node is the RIGHT or LEFT
  *      child of its parent.  If the node is the root of the tree, gender
  *      will be PARENT.
- * @var ubi_btNode::balance
+ * @var ubi_btNodeStruct::balance
  *      Only used by the AVL tree module.  This field indicates the height
  *      balance at a given node.  Other types of balanced or semi-balanced
  *      trees (e.g. red-black trees), if implemented, might also make use
  *      of this field.
  *      @see ubi_AVLtree.h.
  */
-typedef struct ubi_btNodeStruct
+struct ubi_btNodeStruct
   {
   struct ubi_btNodeStruct *Link[ 3 ];
   char                     gender;
   char                     balance;
-  } ubi_btNode;
+  };
 
-/** Pointer to a #ubi_btNode structure.
+/**
+ * @typedef ubi_btNode
+ * @brief   This is the short (typedef'd) name for a `struct ubi_btNodeStruct`.
+ */
+typedef struct ubi_btNodeStruct ubi_btNode;
+
+/**
+ * @typedef ubi_btNodePtr
+ * @brief   Pointer to a `ubi_btNode` structure.
  */
 typedef ubi_btNode *ubi_btNodePtr;
 
@@ -664,79 +674,79 @@ int ubi_btModuleID( int size, char *list[] );
  * including the appropriate module header.
  *//**
  * @def   ubi_trItemPtr
- * @brief Alias for #ubi_btItemPtr
+ * @brief Alias for `ubi_btItemPtr`.
  *
  * @def   ubi_trNode
- * @brief Alias for #ubi_btNode
+ * @brief Alias for `ubi_btNode`.
  *
  * @def   ubi_trNodePtr
- * @brief Alias for #ubi_btNodePtr
+ * @brief Alias for `ubi_btNodePtr`.
  *
  * @def   ubi_trRoot
- * @brief Alias for #ubi_btRoot
+ * @brief Alias for `ubi_btRoot`.
  *
  * @def   ubi_trRootPtr
- * @brief Alias for #ubi_btRootPtr
+ * @brief Alias for `ubi_btRootPtr`.
  *
  * @def   ubi_trCompFunc
- * @brief Alias for #ubi_btCompFunc
+ * @brief Alias for `ubi_btCompFunc`.
  *
  * @def   ubi_trActionRtn
- * @brief Alias for #ubi_btActionRtn
+ * @brief Alias for `ubi_btActionRtn`.
  *
  * @def   ubi_trKillNodeRtn
- * @brief Alias for #ubi_btKillNodeRtn
+ * @brief Alias for `ubi_btKillNodeRtn`.
  *
  * @def   ubi_trSgn
- * @brief Alias for #ubi_btSgn
+ * @brief Alias for `ubi_btSgn`.
  *
  * @def   ubi_trInitNode
- * @brief Alias for #ubi_btInitNode
+ * @brief Alias for `ubi_btInitNode`.
  *
  * @def   ubi_trInitTree
- * @brief Alias for #ubi_btInitTree
+ * @brief Alias for `ubi_btInitTree`.
  *
  * @def   ubi_trInsert
- * @brief Alias for #ubi_btInsert
+ * @brief Alias for `ubi_btInsert`.
  *
  * @def   ubi_trRemove
- * @brief Alias for #ubi_btRemove
+ * @brief Alias for `ubi_btRemove`.
  *
  * @def   ubi_trLocate
- * @brief Alias for #ubi_btLocate
+ * @brief Alias for `ubi_btLocate`.
  *
  * @def   ubi_trFind
- * @brief Alias for #ubi_btFind
+ * @brief Alias for `ubi_btFind`.
  *
  * @def   ubi_trNext
- * @brief Alias for #ubi_btNext
+ * @brief Alias for `ubi_btNext`.
  *
  * @def   ubi_trPrev
- * @brief Alias for #ubi_btPrev
+ * @brief Alias for `ubi_btPrev`.
  *
  * @def   ubi_trFirst
- * @brief Alias for #ubi_btFirst
+ * @brief Alias for `ubi_btFirst`.
  *
  * @def   ubi_trLast
- * @brief Alias for #ubi_btLast
+ * @brief Alias for `ubi_btLast`.
  *
  * @def   ubi_trFirstOf
- * @brief Alias for #ubi_btFirstOf
+ * @brief Alias for `ubi_btFirstOf`.
  *
  * @def   ubi_trLastOf
- * @brief Alias for #ubi_btLastOf
+ * @brief Alias for `ubi_btLastOf`.
  *
  * @def   ubi_trTraverse
- * @brief Alias for #ubi_btTraverse
+ * @brief Alias for `ubi_btTraverse`.
  *
  * @def   ubi_trKillTree
- * @brief Alias for #ubi_btKillTree
+ * @brief Alias for `ubi_btKillTree`.
  *
  * @def   ubi_trLeafNode
- * @brief Alias for #ubi_btLeafNode
+ * @brief Alias for `ubi_btLeafNode`.
  *
  * @def   ubi_trModuleID
- * @brief Alias for #ubi_btModuleID
+ * @brief Alias for `ubi_btModuleID`.
  */
 
 #define ubi_trItemPtr ubi_btItemPtr

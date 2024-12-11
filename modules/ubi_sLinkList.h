@@ -25,7 +25,7 @@
  *
  * -------------------------------------------------------------------------- **
  *
- * $Id: ubi_sLinkList.h; 2024-12-09 21:48:17 -0600; crh$
+ * $Id: ubi_sLinkList.h; 2024-12-11 08:53:18 -0600; crh$
  * https://github.com/ubiqx-org/Modules
  *
  * Change logs are now in git.
@@ -78,7 +78,7 @@
  * @author  Christopher R. Hertel
  * @brief   Singly linked lists.
  * @date    October 1997
- * @version \$Id: ubi_sLinkList.h; 2024-12-09 21:48:17 -0600; crh$
+ * @version \$Id: ubi_sLinkList.h; 2024-12-11 08:53:18 -0600; crh$
  * @copyright Copyright (C) 1997, 1998, 2014, 2020 by Christopher R. Hertel
  *
  * @details
@@ -117,30 +117,25 @@
 /**
  * @struct  ubi_slListNode
  * @brief   Basic singly-linked node structure.
- * @details
-    Defined as follows:
- *  \code{.c}
- *  typedef struct ubi_slListNode
- *    {
- *    struct ubi_slListNode *Next;
- *    } ubi_slNode;
- *  \endcode
- *  The `ubi_slListNode` name is given only as a forward reference.  Use the
- *  typedef'd name, \c #ubi_slNode, instead.
- * @var ubi_slListNode::Next
- *      Pointer to the next node in the singly linked list.
- *
- * @struct  ubi_slNode
- * @brief   This is the short (typedef'd) name for a `struct ubi_slListNode`.
+ * @note    The `%ubi_slListNode` name is used only as a forward reference.
+ *          `%ubi_slNode` is a typedef for `struct %ubi_slListNode`.
+ * @var     ubi_slListNode::Next
+ *          Pointer to the next node in the singly linked list.
  */
-typedef struct ubi_slListNode
+struct ubi_slListNode
   {
   struct ubi_slListNode *Next;
-  } ubi_slNode;
+  };
 
 /**
- * @struct  ubi_slNodePtr
- * @brief   Pointer to a \c #ubi_slNode.
+ * @typedef ubi_slNode
+ * @brief   This is the short (typedef'd) name for a `struct ubi_slListNode`.
+ */
+typedef struct ubi_slListNode ubi_slNode;
+
+/**
+ * @typedef ubi_slNodePtr
+ * @brief   Pointer to a `ubi_slNode`.
  */
 typedef ubi_slNode *ubi_slNodePtr;
 
@@ -166,7 +161,7 @@ typedef struct
   } ubi_slList;
 
 /**
- * @struct  ubi_slListPtr
+ * @typedef ubi_slListPtr
  * @brief   Pointer to a #ubi_slList.
  */
 typedef ubi_slList *ubi_slListPtr;

@@ -25,7 +25,7 @@
  *
  * -------------------------------------------------------------------------- **
  *
- * $Id: ubi_SparseArray.h; 2020-09-23 19:59:09 -0500; crh$
+ * $Id: ubi_SparseArray.h; 2024-12-11 08:53:18 -0600; crh$
  * https://github.com/ubiqx-org/Modules
  *
  * Change logs are now in git.
@@ -45,7 +45,7 @@
  * @author  Christopher R. Hertel
  * @brief   Sparse Array over Binary Trees.
  * @date    29-Aug-2002
- * @version \$Id: ubi_SparseArray.h; 2020-09-23 19:59:09 -0500; crh$
+ * @version \$Id: ubi_SparseArray.h; 2024-12-11 08:53:18 -0600; crh$
  * @copyright Copyright (C) 1999, 2002, 2020 by Christopher R. Hertel
  *
  * @details
@@ -90,27 +90,61 @@
  */
 
 /* Forward Reference. */
-struct ubi_arrNODE;
+struct ubi_arrNodeStruct;
 
-/** The root of a single vector within the sparse array.  */
-typedef struct ubi_arrROOT
+/**
+ * @struct  ubi_arrRootStruct
+ * @brief   The root of a single vector within the sparse array.
+ * @note    The `%ubi_arrRootStruct` and `%ubi_arrNodeStruct` names are used
+ *          only as a forward references.
+ *          * `%ubi_arrRoot` is a typedef for `struct %ubi_arrRootStruct`.
+ *          * `%ubi_arrNode` is a typedef for `struct %ubi_arrNodeStruct`.
+ * @var     ubi_arrRootStruct::root
+ *          Tree Header for the sub-array.
+ * @var     ubi_arrRootStruct::parentArray
+ *          Pointer to the parent array, if any.
+ * @var     ubi_arrRootStruct::parentNode
+ *          Pointer to the parent node, if any.
+ */
+struct ubi_arrRootStruct
   {
-  ubi_trRoot          root;         /**< Tree Header for the sub-array.       */
-  struct ubi_arrROOT *parentArray;  /**< Pointer to the parent array, if any. */
-  struct ubi_arrNODE *parentNode;   /**< Pointer to the parent node, if any.  */
-  } ubi_arrRoot;
+  ubi_trRoot                root;
+  struct ubi_arrRootStruct *parentArray;
+  struct ubi_arrNodeStruct *parentNode;
+  };
 
-/** Pointer to a #ubi_arrRoot.  */
+/**
+ * @typedef ubi_arrRoot
+ * @brief   This is the short (typedef'd) name for a `struct ubi_arrRootStruct`.
+ */
+ typedef struct ubi_arrRootStruct ubi_arrRoot;
+
+/**
+ * @typedef ubi_arrRootPtr
+ * @brief   Pointer to a `ubi_arrRoot`.
+ */
 typedef ubi_arrRoot *ubi_arrRootPtr;
 
-/** A node which can be stored within a vector. */
-typedef struct ubi_arrNODE
+/**
+ * @struct  ubi_arrNodeStruct
+ * @brief   A node which can be stored within a vector.
+ */
+struct ubi_arrNodeStruct
   {
   ubi_trNode     node;        /**< Standard tree node structure.  */
   ubi_arrRootPtr subArray;    /**< Link to potential child array. */
-  } ubi_arrNode;
+  };
 
-/** Pointer to a #ubi_arrNode.  */
+/**
+ * @typedef ubi_arrNode
+ * @brief   This is the short (typedef'd) name for a `struct ubi_arrNodeStruct`.
+ */
+typedef struct ubi_arrNodeStruct ubi_arrNode;
+
+/**
+ * @typedef ubi_arrNodePtr
+ * @brief   Pointer to a `ubi_arrNode`.
+ */
 typedef ubi_arrNode *ubi_arrNodePtr;
 
 
