@@ -3,7 +3,7 @@
  * -------------------------------------------------------------------------- **
  * License: Public Domain
  * Description: ubiqx binary tree implementation test program.
- * $Id: tree-sample.c; 2020-12-12 09:59:49 -0600; crh$
+ * $Id: tree-sample.c; 2024-12-11 09:07:17 -0600; crh$
  * -------------------------------------------------------------------------- **
  * Notes:
  *  This is an example program that shows how the ubiqx binary tree modules
@@ -262,7 +262,8 @@ int main( int argc, char *argv[] )
                        NULL )         /* Overwrites are not allowed.          */
       )
       {
-      (void)fprintf( stderr, "Error: Duplicate key.  Record not added.\n" );
+      (void)fprintf( stderr, "Error: Duplicate key [%s].  ", s );
+      (void)fprintf( stderr, "Record not added.\n" );
       KillNode( (ubi_trNodePtr)RecPtr );
       }
     }
